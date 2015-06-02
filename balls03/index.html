@@ -1,0 +1,53 @@
+<html>
+
+<head>
+    <title>Balls 03</title>
+
+    <link rel="stylesheet" media="screen" href="main.css" />
+
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.5/p5.js"></script>
+    
+    <script language="javascript" type="text/javascript" src="js/blindfish.js"></script>
+    <script language="javascript" type="text/javascript" src="js/sketch.js"></script>
+    <script language="javascript" type="text/javascript" src="js/Mover.js"></script>
+    <script language="javascript" type="text/javascript" src="js/moveObjects.js"></script>
+    <script language="javascript" type="text/javascript" src="js/checkCollision.js"></script>
+    <script language="javascript" type="text/javascript" src="js/applyGravity.js"></script>
+    <script language="javascript" type="text/javascript" src="js/Ball.js"></script>
+
+</head>
+
+<body>
+    <div id="sketch01"> </div>
+    <fieldset id="controls">
+        <legend>Options</legend>
+        <label for="gravitySlider">Gravity: <span id="gValue">0.0</span>
+        </label>
+        <div class="ui">
+            <input id="gravitySlider" type="range" min="-0.5" max="0.5" value="0" step="0.05" />
+        </div>
+
+
+        <label for="frictionSlider">Friction: <span id="fValue">0.99</span>
+        </label>
+        
+        <div class="ui">
+
+            <input id="frictionSlider" type="range" min="0" max="0.05" value="0.01" step="0.001" />
+        </div>
+
+        <div class="uibtn">
+        <input type="checkbox" value="1" checked="checked" id="polarityButton" />
+        <label for="polarityButton">ball polarity</label>
+        </div>
+
+        <div class="uibtn">
+        <input type="checkbox" value="1" checked="checked" id="collisionButton" />
+        <label for="collisionButton">ball collisions</label>
+        </div>
+    </fieldset>
+
+    <script language="javascript" type="text/javascript" src="js/controls.js"></script>
+</body>
+
+</html>
