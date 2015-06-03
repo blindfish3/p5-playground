@@ -1,6 +1,6 @@
 var blindfish = blindfish || {};
 
-// - - - CLASS TRUNK - - - //
+// - - - CLASS TREE - - - //
 blindfish.Tree = function (rootX, rootY, len, angle, levels, splits) {
 
     this.rootX = rootX;
@@ -73,6 +73,15 @@ blindfish.Tree.prototype.calcTipPosition = function () {
     this.tipY = this.rootY - Math.sin(this.angle) * this.len;
 };
 
+blindfish.Tree.prototype.updateTreeHeight = function(newHeight) {
+    var ratio = newHeight/this.len;
+    this.len = newHeight;
+    this.calcTipPosition();
+    for (var i = 0; i < this.limit; i++) {
+        this.branches[i].updateBranchLength(ratio);
+    }
+};
+
 blindfish.Tree.prototype.draw = function () {
     var p = blindfish.p5;
     p.strokeWeight(this.weight);
@@ -111,6 +120,10 @@ blindfish.Branch.prototype.calcMidPosition = function () {
     this.midY = parent.tipY - Math.sin(this.angle) * (this.len / 2);
 };
 
+blindfish.Branch.prototype.updateBranchLength = function(ratio) {
+    this.len *= ratio;
+    this.calcTipPosition();
+}
 
 blindfish.Branch.prototype.draw = function () {
     var p = blindfish.p5;
