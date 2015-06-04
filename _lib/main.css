@@ -1,34 +1,18 @@
 @import "http://weloveiconfonts.com/api/?family=fontawesome";
-
 body {
-     padding: 1.5em;
-margin: 0;
-background: #666;
-font-family: Georgia;
+    padding: 1.5em;
+    margin: 0;
+    background: #666;
+    font-family: Verdana;
 }
 
-h1, h2, h3, h4 {
-  font-family: Verdana;
-  margin-bottom: 0.15em;
+h2,
+h3,
+h4 {
+    font-family: Verdana;
+    margin-bottom: 0.15em;
     color: #fff;
 }
-
-h1 {
- font-size: 1.5em;   
-}
-      
-#defaultCanvas {
-   border-radius: 4px;
-}
-
-.comments {
-          width: 560px;
-          background: rgb(200,175,150);
-          padding: 10px 20px;
-          margin-top: 10px;
-          border-radius: 4px;
- }
-
 
 .p5_hidden {
     box-sizing: border-box;

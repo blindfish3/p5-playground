@@ -82,6 +82,33 @@ blindfish.Tree.prototype.updateTreeHeight = function(newHeight) {
     }
 };
 
+
+//TODO: there's some angle bias at the extremes of the range
+blindfish.Tree.prototype.updateTreeAngle = function(newAngleSpread) {
+    var p = blindfish.p5,
+          newAngleSpread = p.radians(newAngleSpread),
+          splitCounter = 1,
+          angleStep = newAngleSpread/this.maxSplits;
+    
+    for (var i = 0; i < this.limit; i++) {
+        var branch = this.branches[i],
+             newAngle = branch.parent.angle + angleStep * splitCounter - newAngleSpread / 2 + Math.random() * 0.4 - 0.4;
+            
+        branch.angle = newAngle;
+        branch.calcTipPosition();
+        
+        if (splitCounter >= this.maxSplits) {
+                splitCounter = 0;   
+            }
+        splitCounter++;
+    }
+};
+
+blindfish.Tree.prototype.updateTreeWeight = function(newWeight) {
+    this.weight = newWeight;
+}
+
+
 blindfish.Tree.prototype.draw = function () {
     var p = blindfish.p5;
     p.strokeWeight(this.weight);
@@ -125,10 +152,13 @@ blindfish.Branch.prototype.updateBranchLength = function(ratio) {
     this.calcTipPosition();
 }
 
+
 blindfish.Branch.prototype.draw = function () {
     var p = blindfish.p5;
-
+    // this calculation should be 'baked' into the class to avoid
+    // repeated calculations each frame!
     p.strokeWeight(this.trunk.weight / this.level);
+    
     p.line(this.parent.tipX, this.parent.tipY, this.tipX, this.tipY);
 
 };
