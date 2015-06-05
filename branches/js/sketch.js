@@ -1,3 +1,4 @@
+
 blindfish.p5 = new p5(function (p) {
 
     var tree1,
@@ -7,6 +8,7 @@ blindfish.p5 = new p5(function (p) {
                         { name : 'length', default : 90 },
                         { name: 'spread', default: 90},
                         { name: 'weight', default: 16},
+                        { name: 'branchRatio', default: blindfish.g.PHI}
                     ]);
 
     p.setup = function () {
@@ -54,7 +56,7 @@ blindfish.p5 = new p5(function (p) {
               'weight', 
               { min: 1,
                 max: 30,
-                value: 16,
+                value: 10,
                 step: 1
                 },
                 function (x) {
@@ -65,6 +67,23 @@ blindfish.p5 = new p5(function (p) {
                 },
                 function() {
                     tree1.updateTreeWeight(vars.weight);
+                });
+        
+         vars.addSlider( "sketch01", 
+              'branchRatio', 
+              { min: blindfish.g.PHI,
+                max: blindfish.g.TAU,
+                value: blindfish.g.PHI,
+                step: 0.01
+                },
+                function (x) {
+                    return x;
+                },
+                function (x) {
+                    return Math.round(x*1000)/1000;
+                },
+                function() {
+                    tree1.updateTreeBranchRatio(vars.branchRatio);
                 });
 
     };

@@ -1,9 +1,13 @@
 blindfish.VariableManager = function (properties) {
     for (var i = 0, limit = properties.length; i < limit; i++) {
         var property = properties[i];
+        if(!this.hasOwnProperty(property.name)) {
         this[property.name] = property.default;
+        }
+        else {
+            console.error("duplicate property added to VariableManager");
+        }
     }
-    console.info(this);
 };
 
 blindfish.VariableManager.prototype.addSlider = function (targetID, variable, attrs, calcVal, calcOutput, callback) {
