@@ -15,7 +15,7 @@ blindfish.p5 = new p5(function (p) {
     p.setup = function () {
         p.createCanvas(600, 600);
         // controls affect only the first tree
-        tree1 = new blindfish.Tree(p.width * 0.5, p.height, vars.length, p.radians(vars.spread), 5, 4, vars.weight);
+        tree1 = new blindfish.Tree(p.width * 0.5, p.height, vars.length, p.radians(vars.spread), 4, 5, vars.weight);
 
         tree2 = new blindfish.Tree(p.width * 0.2, p.height, 70, p.radians(90), 3, 6);
         tree3 = new blindfish.Tree(p.width * 0.80, p.height, 70, p.radians(90), 6, 3);
