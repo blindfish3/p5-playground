@@ -40,21 +40,34 @@ blindfish.VariableManager.prototype.addSlider = function (targetID, variable, at
     controlWrapper.appendChild(input);
     target.appendChild(controlWrapper);
 
+    input['mouseDown'] = false;
+    
+    input.addEventListener('mousedown', function () {        
+         input['mouseDown'] = true;
+    });
+    
     input.addEventListener('mouseup', function () {
+        input['mouseDown'] = false;
+    });
+    
+    input.addEventListener('mousemove', function () {
+         
+        if(input['mouseDown']) {
+            var sliderVal = input.value,
+                val = calcVal(sliderVal);
 
-        var sliderVal = input.value,
-            val = calcVal(sliderVal);
+            // 'this' inside addEventListener does *not* 
+            // point to the parent object
+            self[variable] = val;
 
-        // 'this' inside addEventListener does *not* 
-        // point to the parent object
-        self[variable] = val;
+            if (calcOutput) {
+                output.innerHTML = calcOutput(sliderVal);
+            } else {
+                output.innerHTML = sliderVal;
+            }
+            callback();
 
-        if (calcOutput) {
-            output.innerHTML = calcOutput(sliderVal);
-        } else {
-            output.innerHTML = sliderVal;
         }
-        callback();
     }, false);
 
 };
