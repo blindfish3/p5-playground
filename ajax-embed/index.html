@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>Dynamic loading of processingJS sketches</title>
+    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAQAAVzABAEAjBQAaDwYAWjUGAGE6CQBrQQ0ATS8PAFhAJwBUQC8AbFI6AHVXPACBZk4A4NrWAPb19QAAAAAAAMmZmZmZmgAJIwAAAAAAcMIjPjA+PjAKpxIuMDMzMAm0Ii4zMzMACaIiLt3dMAAJtyIuIzPQAAm0Un5yM+IzKLRkfncy4iIotRF+dyLkIiq0QX53F+EiGrQUTkd34iIatEVu7u5iIVrBVVRBRFRVbAtGZGZla2uwAMu7u7u8vADAAwAAgAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIABAADAAwAA" />
+
+
+    <style type="text/css">
+        body {
+            background-color: #333;
+            color: #bbb;
+            line-height: normal;
+            font-family: Lucida Grande, Lucida Sans, Arial, Helvetica Neue, Verdana, Geneva, sans-serif;
+            font-size: 11px;
+            font-weight: normal;
+            text-decoration: none;
+            line-height: 1.5em;
+        }
+        
+        a img {
+            border: 0px solid transparent;
+        }
+        
+        a,
+        a:link,
+        a:visited,
+        a:active,
+        a:hover {
+            color: #cdcdcd;
+            text-decoration: underline;
+        }
+        
+        h1 {
+            font-family: Arial, Helvetica Neue, Verdana, Geneva, sans-serif;
+            width: 100%;
+            letter-spacing: 0.1em;
+            margin-bottom: 1em;
+            font-size: 1.65em;
+        }
+        
+        canvas {
+            display: block;
+            outline: 0px;
+            margin-bottom: 1.5em;
+            max-width: 940px;
+            z-index: 500;
+        }
+        
+        #canvasWrapper {
+            margin: 50px auto 0px auto;
+            padding: 25px 25px 15px 25px;
+            width: 200px;
+            min-width: 300px;
+            overflow: auto;
+            border-left: 1px solid #444;
+            border-top: 1px solid #444;
+            border-right: 1px solid #333;
+            border-bottom: 1px solid #333;
+            background-color: #3d3d3d;
+            box-shadow: 0 0 25px #111;
+            -webkit-box-shadow: 0 0 25px #111;
+            -moz-box-shadow: 0 0 25px #111;
+            z-index: 300;
+        }
+        
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(50, 50, 50, 0.8);
+            text-align: center;
+            z-index: 10;
+        }
+        /* - - - - */
+        
+        #previews {
+            width: 200px;
+            min-width: 300px;
+            overflow: auto;
+            margin: 10px auto 5px auto;
+        }
+        
+        .clickme {
+            background: #333;
+            border: solid 1px #666;
+            width: 100px;
+            height: 100px;
+            padding: 5px 10px;
+            margin: 5px;
+            float: left;
+        }
+        
+        .clickme:hover {
+            background: #444;
+            cursor: pointer;
+        }
+        
+        .hidden {
+            visibility: hidden;
+        }
+    </style>
+    <!--[if lt IE 9]>
+			<script type="text/javascript">alert("Your browser does not support the canvas tag.");</script>
+		<![endif]-->
+    <script id="pjsimport" type="text/javascript" src="processing.js"></script>
+
+    <!-- <script id="pjsSketch" type="text/processing" src="" ></script> -->
+
+</head>
+
+<body>
+
+    <div id="overlay" class="hidden">
+
+        <div id="canvasWrapper">
+            <canvas id="sketchCanvas" width="200" height="200">
+                <p>Your browser does not support the canvas tag.</p>
+            </canvas>
+            <noscript>
+                <p>JavaScript is required to view the contents of this page.</p>
+            </noscript>
+        </div>
+
+    </div>
+
+    <div id="previews">
+        <div class="clickme" data-src="demo01.pde" data-width="200" data-height="200">demo 01</div>
+        <div class="clickme" data-src="demo02.pde" data-width="400" data-height="200">demo 02</div>
+    </div>
+
+
+
+    <script>
+        /* loading unloading sketches code adapted from:
+                                                http://stackoverflow.com/questions/11178450/dynamically-unload-a-processing-js-sketch-from-canvas
+                                                */
+
+        (function () {
+
+            var previews = document.getElementById("previews"),
+                canvasWrapper = document.getElementById("canvasWrapper"),
+                sketchCanvas = document.getElementById("sketchCanvas"),
+                overlay = document.getElementById("overlay"),
+                context = sketchCanvas.getContext('2d'),
+
+                stopProcessingInstances = function () {
+                    processingInstances = Processing.instances.length;
+                    // stop any running sketch
+                    if (processingInstances > 0) {
+                        Processing.instances[0].exit();
+                    }
+                    // these don't appear to be essential...
+                    // but might be relevant when changing canvas size
+                    context.setTransform(1, 0, 0, 1, 0, 0);
+                    context.clearRect(0, 0, sketchCanvas.width, sketchCanvas.height);
+
+                };
+
+
+            previews.addEventListener('click', function (evt) {
+                var target = evt.target,
+
+                    // data pulled from preview buttons
+                    sketchURL = target.getAttribute('data-src'),
+                    sketchWidth = target.getAttribute('data-width'),
+                    sketchHeight = target.getAttribute('data-height'),
+                    styleString = "min-width: " + sketchWidth + "px; " +
+                    "min-height: " + sketchHeight + "px;";
+
+                canvasWrapper.setAttribute('style', styleString);
+
+                //WARNING: this is crude and will overwrite any other class on overlay
+                overlay.className = "shown";
+                stopProcessingInstances();
+
+                // Now, load the new Processing script
+                Processing.loadSketchFromSources(sketchCanvas, [sketchURL]);
+
+            }, false);
+
+            
+            overlay.addEventListener('click', function (evt) {
+                var target = evt.target;
+                // important: ensures clicks on canvas don't bubble up 
+                // and trigger the contents of the condition
+                if (target.id === "overlay") {
+                    stopProcessingInstances();
+                    //WARNING: this is crude and will overwrite any other class on overlay
+                    overlay.className = "hidden";
+                }
+            }, false);
+
+        })();
+    </script>
+
+</body>
+
+</html>
