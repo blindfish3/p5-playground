@@ -1,0 +1,50 @@
+body {
+    padding: 1.5em;
+    margin: 0;
+    background: #666;
+    font-family: Georgia;
+}
+
+h1,
+h2,
+h3,
+h4 {
+    font-family: Verdana;
+    margin-bottom: 0.15em;
+}
+
+h1 {
+    font-size: 1.5em;
+}
+
+#defaultCanvas {
+    border-radius: 4px;
+}
+
+.comments {
+    width: 560px;
+    background: rgb(200, 175, 150);
+    padding: 10px 20px;
+    margin-top: 10px;
+    border-radius: 4px;
+}
+
+
+
+
+
+
+#controls {
+    float: left;
+    width: 280px;
+    margin-right: 20px;
+}
+
+#colourControls {
+    float: left;
+    width: 280px;
+}
+
+#colourControls div, #controls div {
+    clear: left
+}
