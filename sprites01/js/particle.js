@@ -1,57 +1,72 @@
-
 blindfish.Particle = function (args) {
     blindfish.Body.call(this, args);
 
-    this.vx = Math.random();
-    this.vy = Math.random();
-    this.rad = 10;
+    this.vx = Math.random() * 4 - 2;
+    this.vy = 0;
+    this.rad = 7;
 
-}
+};
 
 blindfish.Particle.prototype = Object.create(blindfish.Body.prototype);
 
-blindfish.Particle.prototype.render = function() {
-  var p = blindfish.p5;
-    p.fill(0);
-    p.stroke(255);
-    p.ellipse(this.x,this.y, this.rad, this.rad);
-
+blindfish.Particle.prototype.render = function () {
+    // This must happen before any particle specific adjustments
     this.move();
 
-    //TODO: handle wall bounces first...
+    var p = blindfish.p5,
+        bgColour,
+        hitWall = false,
+        // perhaps an optimisation too far
+        x = this.x,
+        y = this.y,
+        r = this.rad;
 
-//        if (keepInBounds) {
-                if (this.x > p.width - this.rad) {
-                    this.x = p.width - this.rad;
-                    this.vx *= -1;
-                } else if (this.x < 0 + this.rad) {
-                    this.x = 0 + this.rad;
-                    this.vx *= -1;
-                }
+    p.fill(150,150,0);
 
-                if (this.y > p.height - this.rad) {
-                    this.y = p.height - this.rad;
-                    this.vy *= -1;
-                } else if (this.y < 0 + this.rad) {
-                    this.y = 0 + this.rad;
-                    this.vy *= -1;
-                }
-//            }
+    p.ellipse(x, y, r, r);
 
-
-
-    var bgColour = blindfish.g.buffer.get(this.x, this.y);
-    if (bgColour && bgColour[3] !== 0) {
-                // hit!
-
+    if (x > p.width - r) {
+        this.x = p.width - r;
         this.vx *= -1;
-        this.vy *= -1;
-        // a crude but simple way to ensure particles never get 'stuck':
-        // They can never go beyond the point of no return
-        this.x += this.vx;
-        this.y += this.vy;
+        hitWall = true;
+    } else if (x < r) {
+        this.x = r;
+        this.vx *= -1;
+        hitWall = true;
+    }
 
-        blindfish.g.bgColour = bgColour;
-            }
+    if (y > p.height - r) {
+        this.y = p.height - r;
+        this.vy *= -1;
+        hitWall = true;
+    } else if (y < r) {
+        this.y = r;
+        this.vy *= -1;
+        hitWall = true;
+    }
+
+
+    //WARNING:  assuming it's not possible to hit both wall and beast simultaneously :/
+    //TODO: test if within sprite bounds before doing expensive get() operation?
+    // That would require us to know about all sprites from here...
+    if (!hitWall) {
+        bgColour = blindfish.g.buffer.get(this.x, this.y);
+
+        if (bgColour && bgColour[3] !== 0) {
+            // hit!
+            this.x = 1 + Math.random() * (p.width - 2);
+            this.y = 1;
+            this.vx = Math.random() * 4 - 2;
+            this.vy = 0;
+            //TODO: replace with a less ugly response
+            blindfish.g.bgColour = bgColour;
+
+            // the red channel for each defined region in beast_mask2.png
+            // now increments by 1, meaning a condition need only inspect a
+            // single value to determine which region is hit
+            var index = bgColour[0];
+            //TODO: switch(index)...
+        }
+    }
 
 };
