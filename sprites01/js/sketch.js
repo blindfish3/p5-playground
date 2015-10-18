@@ -13,7 +13,7 @@ blindfish.bufferImg = function(buffer, img, x, y) {
 
 blindfish.p5 = new p5(function (p) {
 
-    blindfish.g.bgColour = [100, 100, 100, 255];
+    blindfish.g.bgColour = [166, 166, 100, 255];
 
     var beast,
         beast_mask,
@@ -21,7 +21,8 @@ blindfish.p5 = new p5(function (p) {
         beastY,
         buffer,
         numParticles = 10,
-        particles = [];
+        particles = [],
+        defaultBG = blindfish.g.bgColour;
 
     p.preload = function () {
         beast = p.loadImage("imgs/beast.png");
@@ -63,20 +64,20 @@ blindfish.g.buffer = buffer;
 
 
     p.mousePressed = function () {
-        //TODO: test for proximity to beast...
+        //TODO: optimise = test for proximity to beast...
         if (p.mouseX > 0 && p.mouseX < p.width && p.mouseY > 0 && p.mouseY < p.height) {
             blindfish.g.bgColour = buffer.get(p.mouseX, p.mouseY);
             if (blindfish.g.bgColour[3] !== 0) {
                 // hit!
             } else {
-                blindfish.g.bgColour = [100, 100, 100, 255];
+                blindfish.g.bgColour =defaultBG;
             }
         } else {
-            blindfish.g.bgColour = [100, 100, 100, 255];
+            blindfish.g.bgColour =defaultBG;
         }
     };
 
-    //
+
     //    p.mouseReleased = function () {
     //
     //    };
