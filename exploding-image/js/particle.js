@@ -16,7 +16,7 @@ blindfish.Particle = function (args) {
 
 }
 
-blindfish.Particle.prototype.draw = function (mouse_x, mouse_y, mouseOverStage, p) {
+blindfish.Particle.prototype.draw = function (mouse_x, mouse_y, mouseOverStage) {
     var dx = mouse_x - this.x,
         dy = mouse_y - this.y,
         deltaSquared = dx * dx + dy * dy,
@@ -39,7 +39,7 @@ blindfish.Particle.prototype.draw = function (mouse_x, mouse_y, mouseOverStage, 
     this.x += this.vx;
     this.y += this.vy;
 
-    p.image(this.img, this.x, this.y, this.imgWidth, this.imgHeight);
+    P$.image(this.img, this.x, this.y, this.imgWidth, this.imgHeight);
 
 }
 

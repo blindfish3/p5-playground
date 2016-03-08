@@ -1,4 +1,6 @@
-blindfish.p5 = new p5(function (p) {
+// Explicitly binding to window makes it clear that this global is 
+// not an accident...
+window.P$ = new p5(function (p) {
 
     var img,
         pSize = 8,
@@ -11,7 +13,7 @@ blindfish.p5 = new p5(function (p) {
     }
 
     p.setup = function () {
-        p.createCanvas(450, 325, 'webgl');
+        p.createCanvas(450, 325);
 
         var image = new p5.Image(img.width, img.height, p),
             newWidth = Math.floor(img.width / pSize),
