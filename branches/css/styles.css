@@ -1,14 +1,20 @@
-.comments, #controls {
-          width: 300px;
-          background: #555;
+.comments {
+    width: 300px;
+    background: #555;
     border: solid 2px #444;
-          padding: 10px 20px;
-          margin-top: 10px;
-          border-radius: 4px;
-          float: left;
+    padding: 10px 20px;
+    margin-top: 10px;
+    border-radius: 4px;
+    float: left;
  }
 
 #sketch01 {
  float: left;
     margin: 10px 10px 0 0;
+    width: 100%;
+}
+
+#sketch01 canvas {
+    width: 100% !important;
+    height: auto !important;
 }
