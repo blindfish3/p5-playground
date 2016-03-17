@@ -29,22 +29,17 @@ h1 {
     border-radius: 4px;
 }
 
-
-
-
-
-
 #controls {
+    width: 100%;
+    position: relative;
     float: left;
-    width: 280px;
-    margin-right: 20px;
+    padding-bottom: 2em;
+    min-width: 580px;
 }
 
-#colourControls {
+#controls fieldset {
     float: left;
     width: 280px;
 }
 
-#colourControls div, #controls div {
-    clear: left
-}
+

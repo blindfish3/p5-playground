@@ -1,58 +1,50 @@
-(function () {
-    var p = blindfish.p5;
-//        gravitySlider = document.getElementById('gravitySlider')
-//        gravityOutput = document.getElementById('gValue');
-//
-//    
-//        gravitySlider.addEventListener('mouseup', function() {
-//            var g = -gravitySlider.value;
-//            blindfish.g.gravity = g;
-//            gravityOutput.innerHTML = g;
-//
-//        }, false);
+(function() {
     
-    
-    
-    var updateSlider = function(sliderID, outputID, target, calc) {
-        var slider = document.getElementById(sliderID),
-               output = document.getElementById(outputID);
-console.info(slider);
-    
-        return slider.addEventListener('mouseup', function() {
-            var val = calc(slider.value);
-            blindfish.g[target] = val;
-            output.innerHTML = val;
+    var controls = new bufi('#controls');
+    controls.addControlGroup([
+        {
+            type: 'range',
+            options: { label: 'Gravity',
+                        min: -0.2,
+                            max: 0.2,
+                            value: 0,
+                            step: 0.025
+                        },
+            callback: function(val) {
+                blindfish.g.gravity = val;
+            }
+        },
+        {
+            type: 'range',
+            options: { label: 'Friction',
+                        min: 0,
+                            max: 0.05,
+                            value: 0.01,
+                            step: 0.001
+                        },
+            callback: function(val) {
+                console.info(val);
+                blindfish.g.friction = 1 - val;
+            }
+        },
+        {
+            type: 'checkbox',
+            options: { id: 'polarityButton',
+                      label: 'ball polarity',
+                     checked: true},
+            callback: function(val) {
+                blindfish.g.polarityOn = val;
+            }
+        },
+        {
+            type: 'checkbox',
+            options: { id: 'collisionButton',
+                      label: 'ball collisions',
+                     checked: true},
+            callback: function(val) {
+                blindfish.g.collisionsOn = val;
+            }
+        }
+    ], "options");
 
-        }, false);
-    };
-    
-    
-    var gravityEventListener = updateSlider(
-        'gravitySlider', 
-        'gValue', 
-        'gravity', 
-        function(x) { return -x}
-    );
-    
-    var frictionEventListener = updateSlider(
-        'frictionSlider', 
-        'fValue', 
-        'friction', 
-        function(x) { return  1-x }
-    );
-    
-    var addCheckBoxListener = function(id, target) {
-
-        var button = document.getElementById(id);
-        button.addEventListener('click', function() {
-             blindfish.g[target] = button.checked;
-        }, false);
-    
-    }
-    
-
-    addCheckBoxListener('polarityButton', 'polarityOn');
-    addCheckBoxListener('collisionButton', 'collisionsOn');
-    
-    
-})();
+}());
