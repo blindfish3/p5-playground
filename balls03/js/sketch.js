@@ -1,9 +1,9 @@
 blindfish.p5 = new p5(function (p) {
 
-    var  things = [],
-            limit = 20,
-            combinedLimit = limit * 2,
-            dragTracker = blindfish.dragTracker(10);
+    var things = [];
+    var limit = 20;
+    var combinedLimit = limit * 2;
+    var dragTracker = blindfish.dragTracker(10);
     
   p.setup = function () {
     p.createCanvas(600, 400);
@@ -42,9 +42,9 @@ blindfish.p5 = new p5(function (p) {
                     var thing1 = things[j];
                    
                    if(thing0.moving && thing1.moving) {
-                       var  dx = thing1.x - thing0.x,
-                              dy = thing1.y - thing0.y,
-                              distSquared = dx*dx + dy * dy;
+                       var  dx = thing1.x - thing0.x;
+                        var dy = thing1.y - thing0.y;
+                        var distSquared = dx*dx + dy * dy;
                                     if(blindfish.g.polarityOn) {
                                         blindfish.applyGravity(thing0, thing1, dx, dy, distSquared);
                                     }

@@ -43,30 +43,6 @@ h1 {
   margin-left: 5px;   
 }
 
-label {
-    font-size: 90%
-    display: inline-block;
-    color: #fff;
-    padding: 0.5em
-}
-
-.slider {
-    width: 300px;
-}
-
-.slider label:after {
-    content : ":";
-}
-
-.slider input {
-    margin-top: 0.75em;
-}
-
-.slider, .checkbox {
- float: left;
- max-width: 270px;
- margin-bottom: 1em;       
-}
 
 .output {
     color: #fff
