@@ -35,7 +35,6 @@ blindfish.p5 = new p5(function (p) {
                     tree1.updateTreeHeight(val);
                 }
             },
-
             {
                 type: 'range',
                 options: { label: 'ratio',
@@ -48,7 +47,6 @@ blindfish.p5 = new p5(function (p) {
                     tree1.updateTreeBranchRatio(val);
                 }
             },
-
             {
                 type: 'range',
                 options: { label: 'spread',
@@ -61,7 +59,6 @@ blindfish.p5 = new p5(function (p) {
                     tree1.updateTreeAngle(val);
                 }
             },
-
             {
                 type: 'range',
                 options: { label: 'weight',
@@ -74,11 +71,7 @@ blindfish.p5 = new p5(function (p) {
                     tree1.updateTreeWeight(val);
                 }
             },
-
         ],"controls");
-
-
-
 
     };
 
