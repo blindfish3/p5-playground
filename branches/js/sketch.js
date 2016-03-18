@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 blindfish.p5 = new p5(function (p) {
 
@@ -100,19 +101,21 @@ blindfish.p5 = new p5(function (p) {
 }, "sketch01");
 =======
 
+=======
+>>>>>>> master
 blindfish.p5 = new p5(function (p) {
 
-    var tree1,
-           tree2,
-           moveStep = 0,
-           controls = new bufi('#controls'),
+    var tree1;
+    var tree2;
+    var moveStep = 0;
+    var controls = new bufi('#controls');
            // in theory vars and controls could be added to the Tree class itself...
-           vars = {
+    var vars = {
                length: 160,
                spread: 90,
                weight: 16,
                branchRatio: blindfish.g.PHI
-           }
+           };
 
 
 
