@@ -1,18 +1,18 @@
 // This code adapted from Actionscript Animation - Keith Peters - Friends of Ed 2006
-blindfish.checkCollision = function (thing0, thing1, dx, dy, distSquared) {
+const checkCollision = function (thing0, thing1, dx, dy, distSquared) {
   if (distSquared < (thing0.rad + thing1.rad) * (thing0.rad + thing1.rad)) {
     // calculate angle, sine & cosine
     var angle = Math.atan2(dy, dx),
       sine = Math.sin(angle),
       cosine = Math.cos(angle),
-      pos0 = new blindfish.Vector(0, 0),
+      pos0 = new Vector(0, 0),
       // rotate thing1's position
-      pos1 = blindfish.rotateVector(dx, dy, sine, cosine, true),
+      pos1 = rotateVector(dx, dy, sine, cosine, true),
       // rotate thing0's velocity
       //    Vector vel0 = new Vector();
-      vel0 = blindfish.rotateVector(thing0.vx, thing0.vy, sine, cosine, true),
+      vel0 = rotateVector(thing0.vx, thing0.vy, sine, cosine, true),
       // rotate thing1's velocity
-      vel1 = blindfish.rotateVector(thing1.vx, thing1.vy, sine, cosine, true),
+      vel1 = rotateVector(thing1.vx, thing1.vy, sine, cosine, true),
       // collision reaction
       vxTotal = vel0.x - vel1.x;
 
@@ -30,8 +30,8 @@ blindfish.checkCollision = function (thing0, thing1, dx, dy, distSquared) {
     pos1.x += (vel1.x / absV) * overlap;
 
     //rotate positions back
-    (pos0F = blindfish.rotateVector(pos0.x, pos0.y, sine, cosine, false)),
-      (pos1F = blindfish.rotateVector(pos1.x, pos1.y, sine, cosine, false));
+    var pos0F = rotateVector(pos0.x, pos0.y, sine, cosine, false),
+      pos1F = rotateVector(pos1.x, pos1.y, sine, cosine, false);
 
     // adjust positions to screen positions
     thing1.x = thing0.x + pos1F.x;
@@ -40,8 +40,8 @@ blindfish.checkCollision = function (thing0, thing1, dx, dy, distSquared) {
     thing0.y = thing0.y + pos0F.y;
 
     // rotate velocities back
-    var vel0F = blindfish.rotateVector(vel0.x, vel0.y, sine, cosine, false),
-      vel1F = blindfish.rotateVector(vel1.x, vel1.y, sine, cosine, false);
+    var vel0F = rotateVector(vel0.x, vel0.y, sine, cosine, false),
+      vel1F = rotateVector(vel1.x, vel1.y, sine, cosine, false);
 
     thing0.vx = vel0F.x;
     thing0.vy = vel0F.y;
@@ -50,7 +50,7 @@ blindfish.checkCollision = function (thing0, thing1, dx, dy, distSquared) {
   }
 };
 
-blindfish.rotateVector = function (x, y, sine, cosine, reverse) {
+function rotateVector(x, y, sine, cosine, reverse) {
   var rX, rY, result;
 
   if (reverse) {
@@ -60,11 +60,13 @@ blindfish.rotateVector = function (x, y, sine, cosine, reverse) {
     rX = x * cosine - y * sine;
     rY = y * cosine + x * sine;
   }
-  result = new blindfish.Vector(rX, rY);
+  result = new Vector(rX, rY);
   return result;
-};
+}
 
-blindfish.Vector = function (x, y) {
+function Vector(x, y) {
   this.x = x;
   this.y = y;
-};
+}
+
+export { checkCollision };

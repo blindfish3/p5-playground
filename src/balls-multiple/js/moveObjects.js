@@ -1,18 +1,19 @@
+import { globals } from './blindfish.js';
+import { Mover } from './Mover.js';
+
 // By using the base characteristics of a Mover object we
 // can write generic functions that add desired behaviours
 // without making them methods of a class
-blindfish.moveObjects = function (m, keepInBounds, p5) {
-  var p = p5;
-
-  if (m instanceof blindfish.Mover) {
+const moveObjects = function (m, keepInBounds, p) {
+  if (m instanceof Mover) {
     if (m.moving) {
       m.x += m.vx;
       m.y += m.vy;
-      if (blindfish.g.gravityOn) {
-        m.vy -= blindfish.g.gravity;
+      if (globals.gravityOn) {
+        m.vy -= globals.gravity;
       }
-      m.vx *= blindfish.g.friction;
-      m.vy *= blindfish.g.friction;
+      m.vx *= globals.friction;
+      m.vy *= globals.friction;
 
       if (keepInBounds) {
         if (m.x > p.width - m.rad) {
@@ -43,3 +44,5 @@ blindfish.moveObjects = function (m, keepInBounds, p5) {
     console.error('not an instance of Mover');
   }
 };
+
+export { moveObjects };

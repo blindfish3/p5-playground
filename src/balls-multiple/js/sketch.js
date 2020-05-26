@@ -1,14 +1,25 @@
-blindfish.p51 = new p5(function (p) {
+import {
+  dragTracker as DragTracker,
+  globals,
+  selected,
+  setSelected,
+} from './blindfish.js';
+import { Mover } from './Mover.js';
+import { Ball } from './Ball.js';
+import { applyGravity } from './applyGravity.js';
+import { checkCollision } from './checkCollision.js';
+
+new p5(function (p) {
   var things = [];
   var limit = 10;
   var combinedLimit = limit * 2;
-  var dragTracker = blindfish.dragTracker(10);
+  var dragTracker = DragTracker(10);
 
   p.setup = function () {
     p.createCanvas(280, 400);
 
     for (var i = 0; i < limit; i++) {
-      things[i] = new blindfish.Mover(
+      things[i] = new Mover(
         {
           x: p.random(p.width),
           y: p.random(p.height),
@@ -18,7 +29,7 @@ blindfish.p51 = new p5(function (p) {
         p
       );
 
-      things[limit + i] = new blindfish.Ball(
+      things[limit + i] = new Ball(
         {
           x: p.random(p.width),
           y: p.random(p.height),
@@ -46,11 +57,11 @@ blindfish.p51 = new p5(function (p) {
             var dx = thing1.x - thing0.x,
               dy = thing1.y - thing0.y,
               distSquared = dx * dx + dy * dy;
-            if (blindfish.g.polarityOn) {
-              blindfish.applyGravity(thing0, thing1, dx, dy, distSquared);
+            if (globals.polarityOn) {
+              applyGravity(thing0, thing1, dx, dy, distSquared);
             }
-            if (blindfish.g.collisionsOn) {
-              blindfish.checkCollision(thing0, thing1, dx, dy, distSquared);
+            if (globals.collisionsOn) {
+              checkCollision(thing0, thing1, dx, dy, distSquared);
             }
           }
         }
@@ -59,7 +70,7 @@ blindfish.p51 = new p5(function (p) {
       things[i].update();
     }
 
-    if (blindfish.selected && p.mouseIsPressed) {
+    if (selected && p.mouseIsPressed) {
       // if a ball is selected then it's being dragged and we need to track mouse motion
       dragTracker.track(p.createVector(p.mouseX, p.mouseY));
     }
@@ -67,38 +78,38 @@ blindfish.p51 = new p5(function (p) {
 
   //TODO: fix bug - multiple balls can be picked up :/
   p.mousePressed = function () {
-    if (!blindfish.selected) {
+    if (!selected) {
       for (var i = combinedLimit - 1; i > -1; i--) {
         var thing = things[i];
 
         if (thing.mouseOver) {
           thing.moving = false;
-          blindfish.selected = thing;
+          setSelected(thing);
         }
       }
     }
   };
 
   p.mouseReleased = function () {
-    if (blindfish.selected) {
+    if (selected) {
       dragTracker.release();
-      blindfish.selected.moving = true;
-      blindfish.selected = undefined;
+      selected.moving = true;
+      setSelected(undefined);
     }
   };
 }, 'sketch01');
 
-blindfish.p52 = new p5(function (p) {
+new p5(function (p) {
   var things = [],
     limit = 10,
     combinedLimit = limit * 2,
-    dragTracker = blindfish.dragTracker(10);
+    dragTracker = DragTracker(10);
 
   p.setup = function () {
     p.createCanvas(280, 400);
 
     for (var i = 0; i < limit; i++) {
-      things[i] = new blindfish.Mover(
+      things[i] = new Mover(
         {
           x: p.random(p.width),
           y: p.random(p.height),
@@ -108,7 +119,7 @@ blindfish.p52 = new p5(function (p) {
         p
       );
 
-      things[limit + i] = new blindfish.Ball(
+      things[limit + i] = new Ball(
         {
           x: p.random(p.width),
           y: p.random(p.height),
@@ -136,11 +147,11 @@ blindfish.p52 = new p5(function (p) {
             var dx = thing1.x - thing0.x,
               dy = thing1.y - thing0.y,
               distSquared = dx * dx + dy * dy;
-            if (blindfish.g.polarityOn) {
-              blindfish.applyGravity(thing0, thing1, dx, dy, distSquared);
+            if (globals.polarityOn) {
+              applyGravity(thing0, thing1, dx, dy, distSquared);
             }
-            if (blindfish.g.collisionsOn) {
-              blindfish.checkCollision(thing0, thing1, dx, dy, distSquared);
+            if (globals.collisionsOn) {
+              checkCollision(thing0, thing1, dx, dy, distSquared);
             }
           }
         }
@@ -149,30 +160,30 @@ blindfish.p52 = new p5(function (p) {
       things[i].update();
     }
 
-    if (blindfish.selected && p.mouseIsPressed) {
+    if (selected && p.mouseIsPressed) {
       // if a ball is selected then it's being dragged and we need to track mouse motion
       dragTracker.track(p.createVector(p.mouseX, p.mouseY));
     }
   };
 
   p.mousePressed = function () {
-    if (!blindfish.selected) {
+    if (!selected) {
       for (var i = combinedLimit - 1; i > -1; i--) {
         var thing = things[i];
 
         if (thing.mouseOver) {
           thing.moving = false;
-          blindfish.selected = thing;
+          setSelected(thing);
         }
       }
     }
   };
 
   p.mouseReleased = function () {
-    if (blindfish.selected) {
+    if (selected) {
       dragTracker.release();
-      blindfish.selected.moving = true;
-      blindfish.selected = undefined;
+      selected.moving = true;
+      setSelected(undefined);
     }
   };
 }, 'sketch02');

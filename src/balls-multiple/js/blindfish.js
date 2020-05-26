@@ -1,12 +1,10 @@
-var blindfish = {};
-
-blindfish.c = {
+const constants = {
   POS: 1,
   NEG: -1,
   POLES: [-1, 1],
 };
 
-blindfish.g = {
+const globals = {
   gravity: 0.0,
   friction: 0.99,
   spring: 0.05,
@@ -15,9 +13,9 @@ blindfish.g = {
   collisionsOn: true,
 };
 
-blindfish.selected = undefined;
+let selected = undefined;
 
-blindfish.dragTracker = function (sampleLength) {
+const dragTracker = function (sampleLength) {
   var limit = sampleLength,
     vectors = [],
     track = function (vector) {
@@ -40,8 +38,8 @@ blindfish.dragTracker = function (sampleLength) {
         totalDY += b.y - a.y;
       }
 
-      blindfish.selected.vx = totalDX / vectorsLength;
-      blindfish.selected.vy = totalDY / vectorsLength;
+      selected.vx = totalDX / vectorsLength;
+      selected.vy = totalDY / vectorsLength;
     };
 
   return {
@@ -49,3 +47,15 @@ blindfish.dragTracker = function (sampleLength) {
     release: release,
   };
 };
+
+const setGlobal = function (id, value) {
+  if (globals.hasOwnProperty(id)) {
+    globals[id] = value;
+  }
+};
+
+const setSelected = function (input) {
+  selected = input;
+};
+
+export { constants, globals, dragTracker, selected, setGlobal, setSelected };

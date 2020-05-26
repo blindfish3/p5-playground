@@ -42,5 +42,4 @@ new p5(function (p) {
       segment.draw(p);
     }
   };
-
 }, 'sketch01');

@@ -1,7 +1,9 @@
+import { Mover } from './Mover.js';
+
 // inheritance followingthe pattern at:
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Introduction_to_Object-Oriented_JavaScript#Inheritance
-blindfish.Ball = function (args, p5) {
-  blindfish.Mover.call(this, args, p5);
+const Ball = function (args, p5) {
+  Mover.call(this, args, p5);
 
   this.rad = args.rad;
   this.mass = (Math.PI * this.rad * this.rad) / 2;
@@ -10,11 +12,11 @@ blindfish.Ball = function (args, p5) {
   this.colour = this.polarity > 0 ? [255, 166, 0] : [0, 255, 66];
 };
 
-blindfish.Ball.prototype = Object.create(blindfish.Mover.prototype);
-blindfish.Ball.prototype.constructor = blindfish.Ball;
+Ball.prototype = Object.create(Mover.prototype);
+Ball.prototype.constructor = Ball;
 
 // Overridden methods must come after the above...
-blindfish.Ball.prototype.draw = function () {
+Ball.prototype.draw = function () {
   var p = this.p;
 
   this.isMouseOver(p.mouseX, p.mouseY);
@@ -29,11 +31,13 @@ blindfish.Ball.prototype.draw = function () {
   p.ellipse(this.x, this.y, this.rad, this.rad);
 };
 
-//TODO: need to check against blindfish.selected
+//TODO: need to check against selected
 // once a ball is slecte it shouldn't be possible to mouse over another...
-blindfish.Ball.prototype.isMouseOver = function (mX, mY) {
+Ball.prototype.isMouseOver = function (mX, mY) {
   var mouseIsOver =
     (mX - this.x) * (mX - this.x) + (mY - this.y) * (mY - this.y) <
     this.rad * this.rad;
   this.mouseOver = mouseIsOver;
 };
+
+export { Ball };

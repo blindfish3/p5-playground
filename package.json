@@ -6,6 +6,9 @@
   "repository": "https://github.com/blindfish3/p5-playground.git",
   "author": "Ben Calder <ben@blindfish.co.uk>",
   "license": "MIT",
+  "scripts": {
+    "format": "gulp lint && gulp prettier"
+  },
   "devDependencies": {
     "@babel/core": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
