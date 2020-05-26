@@ -1,6 +1,6 @@
-//TODO: fix springiness between segments
+import { Segment } from './Segment.js';
 
-blindfish.p5 = new p5(function (p) {
+new p5(function (p) {
   var segments = [],
     limit = 30,
     length = 15;
@@ -11,7 +11,7 @@ blindfish.p5 = new p5(function (p) {
     p.stroke(60, 60, 60, 50);
 
     for (var i = 0; i < limit; i++) {
-      var segment = new blindfish.Segment(
+      var segment = new Segment(
         p.width / 2 - length * i,
         p.height / 2 - length * 1,
         length
@@ -39,20 +39,8 @@ blindfish.p5 = new p5(function (p) {
         var previousSegment = segments[i - 1];
         segment.setTarget(previousSegment.x1, previousSegment.y1);
       }
-
-      segment.draw();
+      segment.draw(p);
     }
-
-    //        if (p.mouseIsPressed) {
-    //
-    //        }
   };
 
-  //    p.mousePressed = function () {
-  //
-  //    };
-  //
-  //    p.mouseReleased = function () {
-  //
-  //    };
 }, 'sketch01');

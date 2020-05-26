@@ -1,34 +1,50 @@
-const gulp = require("gulp");
-const { series, parallel } = require("gulp");
-const sourcemaps = require("gulp-sourcemaps");
-const babel = require("gulp-babel");
-const del = require('del');
-const browserSync = require('browser-sync').create();
-const prettier = require('gulp-prettier');
-const eslint = require('gulp-eslint');
+const gulp = require('gulp');
+const { series, parallel } = require('gulp');
 
-const reload = browserSync.reload;
+const babel = require('gulp-babel');
+const browserSync = require('browser-sync').create();
+const cache = require('gulp-cached');
+const del = require('del');
+const eslint = require('gulp-eslint');
+const prettier = require('gulp-prettier');
+const sourcemaps = require('gulp-sourcemaps');
+
 const SRC = './src';
 const DIST = './dist';
 
+function reload(done) {
+  browserSync.reload();
+  done();
+}
+
 function clean() {
-    return del([DIST + '/**']);
+  return del([DIST + '/**']);
 };
 
 
 function assets() {
-    return gulp.src([SRC + '/**/*',
+  return gulp.src([SRC + '/**/*',
             '!' + SRC + '/**/*.js',
-        ])
-        .pipe(gulp.dest(DIST))
-        .pipe(browserSync.stream());
+    ])
+    .pipe(cache('assets'))
+    .pipe(gulp.dest(DIST));
 };
 
 function scripts() {
-  return gulp.src("src/**/*.js")
+  return gulp.src('src/**/*.js')
+    .pipe(cache('scripts'))
     .pipe(sourcemaps.init())
-    .pipe(babel())
-    .pipe(sourcemaps.write("."))
+    .pipe(babel({
+            presets: [
+              ['@babel/preset-env',
+              {
+                'targets': {
+                'esmodules' : true
+              },
+              'modules' : false
+            }]]
+        }))
+    .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(DIST));
 };
 
@@ -43,32 +59,32 @@ function lint() {
   .pipe(eslint({
     fix: true
   }))
-  .pipe(eslint.format())
+  .pipe(eslint.format());
 }
 
 function serve(done) {
   browserSync.init({
       server: {
           baseDir: DIST,
-          directory: true
+          directory: true,
+          serveStaticOptions: {
+            extensions: ['html']
+        }
       },
       ghostmode: {
           clicks: true,
           forms: true,
           scroll: true
-      }
-
+      },
+      open: false
   });
-  done();
+  gulp.watch(SRC + '/**/*.html', series(assets, reload));
+  gulp.watch(SRC + '/**/*.css', series(assets, reload));
+  gulp.watch(SRC + '/**/*.js', series(scripts, reload));
 };
 
-function watchFiles() {
-  gulp.watch(SRC + "/**/*.html", series(assets, reload));
-  gulp.watch(SRC + "/**/*.css", series(assets, reload));
-  gulp.watch(SRC + "/**/*.js", series(scripts, reload));
-}
+gulp.task('prettier', prettify);
+gulp.task('lint', lint);
+gulp.task('clean', clean);
 
-gulp.task("prettier", prettify);
-gulp.task("lint", lint);
-
-gulp.task("default", series(clean, assets, scripts, serve, watchFiles));
+gulp.task('default', series(clean, assets, scripts, serve));
