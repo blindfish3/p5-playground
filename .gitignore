@@ -3,4 +3,5 @@ _tests
 sprites01/sourcefiles
 p5.sound.js
 build
+dist
 node_modules
