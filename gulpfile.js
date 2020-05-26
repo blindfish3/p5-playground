@@ -4,6 +4,8 @@ const sourcemaps = require("gulp-sourcemaps");
 const babel = require("gulp-babel");
 const del = require('del');
 const browserSync = require('browser-sync').create();
+const prettier = require('gulp-prettier');
+const eslint = require('gulp-eslint');
 
 const reload = browserSync.reload;
 const SRC = './src';
@@ -30,6 +32,19 @@ function scripts() {
     .pipe(gulp.dest(DIST));
 };
 
+function prettify() {
+  return gulp.src('./src/**/*.js')
+    .pipe(prettier({ singleQuote: true }))
+    .pipe(gulp.dest(SRC));
+}
+
+function lint() {
+  return gulp.src('./src/**/*.js')
+  .pipe(eslint({
+    fix: true
+  }))
+  .pipe(eslint.format())
+}
 
 function serve(done) {
   browserSync.init({
@@ -48,10 +63,12 @@ function serve(done) {
 };
 
 function watchFiles() {
-
   gulp.watch(SRC + "/**/*.html", series(assets, reload));
   gulp.watch(SRC + "/**/*.css", series(assets, reload));
   gulp.watch(SRC + "/**/*.js", series(scripts, reload));
 }
+
+gulp.task("prettier", prettify);
+gulp.task("lint", lint);
 
 gulp.task("default", series(clean, assets, scripts, serve, watchFiles));

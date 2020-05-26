@@ -1,5 +1,3 @@
 var blindfish = blindfish || {};
 
-blindfish.g = {
-
-};
+blindfish.g = {};

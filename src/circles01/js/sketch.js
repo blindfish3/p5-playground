@@ -1,136 +1,129 @@
 blindfish.p5 = new p5(function (p) {
+  var parentCircle;
+  var childCircles = [];
+  var numChildren = 12;
+  var vars = {
+    divisions: numChildren,
+    depth: 2,
+    opacity: 0.015,
+    r: 255,
+    g: 255,
+    b: 255,
+  };
 
-    var parentCircle;
-    var childCircles = [];
-    var numChildren = 12;
-    var vars = {
-            'divisions': numChildren ,
-            'depth' : 2,
-            'opacity': 0.015,
-            'r' : 255,
-            'g' : 255,
-            'b' : 255
-    };
+  var fill;
+  var updateOpacity = function () {
+    //TODO: make this more dynamic based on divisions as well as depth
+    fill =
+      'rgba(' + vars.r + ',' + vars.g + ',' + vars.b + ',' + vars.opacity + ')';
+  };
 
-        
-    var fill;
-    var updateOpacity = function() {
-            //TODO: make this more dynamic based on divisions as well as depth
-            fill = 'rgba(' + vars.r + ',' + vars.g + ',' + vars.b + ',' + vars.opacity + ')'
-        };
+  updateOpacity();
 
-        updateOpacity();
+  p.setup = function () {
+    p.createCanvas(600, 600);
 
+    parentCircle = blindfish.CircleManager.addCircle({
+      x: p.width / 2,
+      y: p.height / 2,
+      rad: 60,
+      divisions: numChildren,
+    });
 
-    p.setup = function () {
-        p.createCanvas(600, 600);
+    var controls = new bufi('#controls');
 
-        parentCircle = blindfish.CircleManager.addCircle({x: p.width/2, y:p.height/2, rad: 60, divisions: numChildren});
-        
-        
-        var controls = new bufi('#controls');
-        
-    controls.addControlGroup([
+    controls.addControlGroup(
+      [
         {
-            type: 'range',
-            options: { label: 'divisions',
-                        min: 0,
-                        max: 24,
-                        value: vars.divisions,
-                        step: 1
-                        },
-            callback: function(val) {
-                if(val !== parentCircle.divisions) {
-                        parentCircle.divisions = val;
-                        parentCircle.updateChildren();
-                        updateOpacity();
-                    }
+          type: 'range',
+          options: {
+            label: 'divisions',
+            min: 0,
+            max: 24,
+            value: vars.divisions,
+            step: 1,
+          },
+          callback: function (val) {
+            if (val !== parentCircle.divisions) {
+              parentCircle.divisions = val;
+              parentCircle.updateChildren();
+              updateOpacity();
             }
+          },
         },
         {
-            type: 'range',
-            options: { label: 'depth',
-                        min: 0,
-                        max: 3,
-                        value: vars.depth,
-                        step: 1
-                        },
-            callback: function(val) {
-                if(val !== parentCircle.maxDepth) {
-                        parentCircle.maxDepth = val;
-                        parentCircle.updateChildren();
-                        updateOpacity();
-                    }
+          type: 'range',
+          options: {
+            label: 'depth',
+            min: 0,
+            max: 3,
+            value: vars.depth,
+            step: 1,
+          },
+          callback: function (val) {
+            if (val !== parentCircle.maxDepth) {
+              parentCircle.maxDepth = val;
+              parentCircle.updateChildren();
+              updateOpacity();
             }
+          },
         },
         {
-            type: 'range',
-            options: { label: 'opacity',
-                        min: 0,
-                        max: 0.1,
-                        value: vars.opacity,
-                        step: 0.0001
-                        },
-            callback: function(val) {
-                vars.opacity = val;
-                updateOpacity();
-            }
-        }], "options", "options");
-        
-        
-        
-    controls.addControlGroup([
+          type: 'range',
+          options: {
+            label: 'opacity',
+            min: 0,
+            max: 0.1,
+            value: vars.opacity,
+            step: 0.0001,
+          },
+          callback: function (val) {
+            vars.opacity = val;
+            updateOpacity();
+          },
+        },
+      ],
+      'options',
+      'options'
+    );
+
+    controls.addControlGroup(
+      [
         {
-            type: 'range',
-            options: { label: 'r',
-                        min: 0,
-                        max: 255,
-                        value: vars.r,
-                        step: 1
-                        },
-            callback: function(val) {
-               vars.r = val;
-                updateOpacity();    
-            }
+          type: 'range',
+          options: { label: 'r', min: 0, max: 255, value: vars.r, step: 1 },
+          callback: function (val) {
+            vars.r = val;
+            updateOpacity();
+          },
         },
         {
-            type: 'range',
-            options: { label: 'g',
-                        min: 0,
-                        max: 255,
-                        value: vars.g,
-                        step: 1
-                        },
-            callback: function(val) {
-               vars.g = val;
-                updateOpacity();    
-            }
+          type: 'range',
+          options: { label: 'g', min: 0, max: 255, value: vars.g, step: 1 },
+          callback: function (val) {
+            vars.g = val;
+            updateOpacity();
+          },
         },
         {
-            type: 'range',
-            options: { label: 'b',
-                        min: 0,
-                        max: 255,
-                        value: vars.b,
-                        step: 1
-                        },
-            callback: function(val) {
-               vars.b = val;
-                updateOpacity();    
-            }
-        },], "colours", "colourControls");
-        
+          type: 'range',
+          options: { label: 'b', min: 0, max: 255, value: vars.b, step: 1 },
+          callback: function (val) {
+            vars.b = val;
+            updateOpacity();
+          },
+        },
+      ],
+      'colours',
+      'colourControls'
+    );
+  };
 
-    };
+  p.draw = function () {
+    p.background(0);
+    p.noStroke();
 
-    p.draw = function () {
-        p.background(0);
-        p.noStroke();
-
-        p.fill(fill);
-        parentCircle.draw();
-
-    };
-
-}, "sketch01");
-
+    p.fill(fill);
+    parentCircle.draw();
+  };
+}, 'sketch01');
