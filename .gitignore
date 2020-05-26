@@ -2,3 +2,5 @@ _template-old
 _tests
 sprites01/sourcefiles
 p5.sound.js
+build
+node_modules
