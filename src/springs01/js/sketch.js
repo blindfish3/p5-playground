@@ -1,11 +1,22 @@
-blindfish.p5 = new p5(function (p) {
+import { Mover } from '/lib/balls/Mover.js';
+import { Ball } from '/lib/balls/Ball.js';
+import { VariableManager } from '/lib/VariableManager.js';
+
+const globals = {
+  gravity: 0.3,
+  friction: 0.75,
+  spring: 0.05,
+  bounce: -0.8,
+};
+
+new p5(function (p) {
   var dx,
     dy,
     angle,
     numBalls = 10,
     springLength = 25,
     balls = [],
-    variables = new blindfish.VariableManager([
+    variables = new VariableManager([
       { name: 'gravity', default: 0.3 },
       { name: 'friction', default: 0.99 },
       { name: 'spring', default: 0.99 },
@@ -17,7 +28,7 @@ blindfish.p5 = new p5(function (p) {
     p.createCanvas(710, 400);
 
     for (var i = 0; i < numBalls; i++) {
-      balls[i] = new blindfish.Ball(
+      balls[i] = new Ball(
         {
           x: p.width / 2,
           y: p.height / 2,
@@ -57,12 +68,12 @@ blindfish.p5 = new p5(function (p) {
         p.line(b.x, b.y, a.x, a.y);
       }
 
-      a.vx += (a.targetX - a.x) * blindfish.g.spring;
-      a.vy += (a.targetY - a.y) * blindfish.g.spring;
+      a.vx += (a.targetX - a.x) * globals.spring;
+      a.vy += (a.targetY - a.y) * globals.spring;
 
-      a.vy += blindfish.g.gravity;
-      a.vx *= blindfish.g.friction;
-      a.vy *= blindfish.g.friction;
+      a.vy += globals.gravity;
+      a.vx *= globals.friction;
+      a.vy *= globals.friction;
       a.x += a.vx;
       a.y += a.vy;
 

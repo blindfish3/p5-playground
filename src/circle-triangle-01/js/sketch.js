@@ -1,4 +1,6 @@
-blindfish.p5 = new p5(function (p) {
+import { Circle, Triangle } from './circle-triangle.js';
+
+new p5(function (p) {
   var t, c;
 
   p.setup = function () {
@@ -7,19 +9,20 @@ blindfish.p5 = new p5(function (p) {
     var w = p.width,
       h = p.height;
 
-    t = new blindfish.Triangle(
+    t = new Triangle(
       [w * 0.5, h * 0.25],
       [w * 0.25, h * 0.75],
-      [w * 0.75, h * 0.75]
+      [w * 0.75, h * 0.75],
+      p
     );
 
-    c = new blindfish.Circle(0, 0, p.width * 0.1);
+    c = new Circle(0, 0, p.width * 0.1, p);
   };
 
   p.draw = function () {
     p.background(0);
 
-    if (blindfish.circleTriangleCollision(c, t)) {
+    if (circleTriangleCollision(c, t, p)) {
       p.stroke(0, 255, 0);
     } else {
       p.stroke(255, 0, 0);
@@ -40,9 +43,8 @@ blindfish.p5 = new p5(function (p) {
   //    };
 }, 'sketch01');
 
-blindfish.circleTriangleCollision = function (c, t) {
-  var p = blindfish.p5,
-    collision = false,
+function circleTriangleCollision(c, t, p) {
+  var collision = false,
     dx = t.centreX - c.x,
     dy = t.centreY - c.y,
     angle = Math.atan2(dy, dx),
@@ -69,4 +71,4 @@ blindfish.circleTriangleCollision = function (c, t) {
   p.ellipse(targetX, targetY, 5, 5);
 
   return collision;
-};
+}

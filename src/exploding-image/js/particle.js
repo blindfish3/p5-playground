@@ -1,4 +1,11 @@
-blindfish.Particle = function (args) {
+const globals = {
+  gravity: 0.0,
+  friction: 0.99,
+  spring: 0.05,
+};
+
+const Particle = function (args, p5) {
+  this.p5 = p5;
   this.x = args.x;
   this.y = args.y;
   this.vx = args.vx || 0;
@@ -15,11 +22,7 @@ blindfish.Particle = function (args) {
   this.returnToOrigin = true;
 };
 
-blindfish.Particle.prototype.draw = function (
-  mouse_x,
-  mouse_y,
-  mouseOverStage
-) {
+Particle.prototype.draw = function (mouse_x, mouse_y, mouseOverStage) {
   var dx = mouse_x - this.x,
     dy = mouse_y - this.y,
     deltaSquared = dx * dx + dy * dy,
@@ -42,10 +45,10 @@ blindfish.Particle.prototype.draw = function (
   this.x += this.vx;
   this.y += this.vy;
 
-  P$.image(this.img, this.x, this.y, this.imgWidth, this.imgHeight);
+  this.p5.image(this.img, this.x, this.y, this.imgWidth, this.imgHeight);
 };
 
-blindfish.Particle.prototype.moveToOrigin = function () {
+Particle.prototype.moveToOrigin = function () {
   if (this.returnToOrigin) {
     this.x = this.originX;
     this.y = this.originY;
@@ -56,13 +59,15 @@ blindfish.Particle.prototype.moveToOrigin = function () {
     var dx2 = this.originX - this.x,
       dy2 = this.originY - this.y;
 
-    this.vx += dx2 * blindfish.g.spring;
-    this.vy += dy2 * blindfish.g.spring;
-    this.vx *= blindfish.g.friction;
-    this.vy *= blindfish.g.friction;
+    this.vx += dx2 * globals.spring;
+    this.vy += dy2 * globals.spring;
+    this.vx *= globals.friction;
+    this.vy *= globals.friction;
 
     if (Math.abs(dx2) < 0.05 && Math.abs(dy2) < 0.05) {
       this.returnToOrigin = true;
     }
   }
 };
+
+export { Particle };

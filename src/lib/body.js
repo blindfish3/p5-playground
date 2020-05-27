@@ -1,4 +1,6 @@
-blindfish.Body = function (args) {
+const Body = function (args, p5, globals) {
+  this.p5 = p5;
+  this.globals = globals;
   this.x = args.x;
   this.y = args.y;
   this.vx = args.vx || 0;
@@ -11,16 +13,17 @@ blindfish.Body = function (args) {
   this.deadZone = args.deadZone || 20;
 };
 
-blindfish.Body.prototype.move = function () {
-  var p = blindfish.p5;
+Body.prototype.move = function () {
+  var p = this.p5;
+  const globals = this.globals;
 
   if (this.alive) {
     if (this.gravityAffected) {
-      this.vy += blindfish.g.gravity;
+      this.vy += globals.gravity;
     }
     if (this.frictionAffected) {
-      this.vx *= blindfish.g.friction;
-      this.vy *= blindfish.g.friction;
+      this.vx *= globals.friction;
+      this.vy *= globals.friction;
     }
 
     this.x += this.vx;
@@ -34,8 +37,8 @@ blindfish.Body.prototype.move = function () {
   }
 };
 
-blindfish.Body.prototype.checkConstraints = function () {
-  var p = blindfish.p5;
+Body.prototype.checkConstraints = function () {
+  var p = p5;
   //constraints
   if (this.x < -this.deadZone) {
     this.x = p.width + this.deadZone;
@@ -51,4 +54,6 @@ blindfish.Body.prototype.checkConstraints = function () {
 
 // more than likely this will involve unregisterDraw() as well
 // as removal from container
-blindfish.Body.prototype.remove = function () {};
+Body.prototype.remove = function () {};
+
+export { Body };

@@ -1,4 +1,4 @@
-blindfish.VariableManager = function (properties) {
+const VariableManager = function (properties) {
   for (var i = 0, limit = properties.length; i < limit; i++) {
     var property = properties[i];
     if (!this.hasOwnProperty(property.name)) {
@@ -9,7 +9,7 @@ blindfish.VariableManager = function (properties) {
   }
 };
 
-blindfish.VariableManager.prototype.addSlider = function (
+VariableManager.prototype.addSlider = function (
   targetID,
   variable,
   attrs,
@@ -77,7 +77,7 @@ blindfish.VariableManager.prototype.addSlider = function (
   );
 };
 
-blindfish.VariableManager.prototype.addCheckbox = function (
+VariableManager.prototype.addCheckbox = function (
   targetID,
   variable,
   attrs,
@@ -108,3 +108,5 @@ blindfish.VariableManager.prototype.addCheckbox = function (
     false
   );
 };
+
+export { VariableManager };

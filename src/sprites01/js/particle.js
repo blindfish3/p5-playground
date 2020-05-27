@@ -1,18 +1,20 @@
-blindfish.Particle = function (args) {
-  blindfish.Body.call(this, args);
+import { Body } from '/lib/body.js';
+
+const Particle = function (args, p5, globals) {
+  Body.call(this, args, p5, globals);
 
   this.vx = Math.random() * 4 - 2;
   this.vy = 0;
   this.rad = 7;
 };
 
-blindfish.Particle.prototype = Object.create(blindfish.Body.prototype);
+Particle.prototype = Object.create(Body.prototype);
 
-blindfish.Particle.prototype.render = function () {
+Particle.prototype.render = function () {
   // This must happen before any particle specific adjustments
   this.move();
 
-  var p = blindfish.p5,
+  var p = this.p5,
     bgColour,
     hitWall = false,
     // perhaps an optimisation too far
@@ -48,7 +50,7 @@ blindfish.Particle.prototype.render = function () {
   //TODO: test if within sprite bounds before doing expensive get() operation?
   // That would require us to know about all sprites from here...
   if (!hitWall) {
-    bgColour = blindfish.g.buffer.get(this.x, this.y);
+    bgColour = this.globals.buffer.get(this.x, this.y);
 
     if (bgColour && bgColour[3] !== 0) {
       // hit!
@@ -57,7 +59,7 @@ blindfish.Particle.prototype.render = function () {
       this.vx = Math.random() * 4 - 2;
       this.vy = 0;
       //TODO: replace with a less ugly response
-      blindfish.g.bgColour = bgColour;
+      this.globals.bgColour = bgColour;
 
       // the red channel for each defined region in beast_mask2.png
       // now increments by 1, meaning a condition need only inspect a
@@ -67,3 +69,5 @@ blindfish.Particle.prototype.render = function () {
     }
   }
 };
+
+export { Particle };

@@ -1,5 +1,6 @@
 // simple circle class
-blindfish.Circle = function (x, y, radius) {
+const Circle = function (x, y, radius, p5) {
+  this.p5 = p5;
   this.x = x;
   this.y = y;
   this.vx = Math.random() * 3 - 1.5;
@@ -7,8 +8,8 @@ blindfish.Circle = function (x, y, radius) {
   this.radius = radius;
 };
 
-blindfish.Circle.prototype.drawCircle = function () {
-  var p = blindfish.p5;
+Circle.prototype.drawCircle = function () {
+  var p = this.p5;
   this.x = p.mouseX;
   this.y = p.mouseY;
   p.ellipseMode(p.CENTER);
@@ -16,7 +17,7 @@ blindfish.Circle.prototype.drawCircle = function () {
 };
 
 // fairly standard point to circle collision detection
-blindfish.Circle.prototype.isInCircle = function (pX, pY) {
+Circle.prototype.isInCircle = function (pX, pY) {
   var dx = pX - this.x,
     dy = pY - this.y,
     distSquared = dx * dx + dy * dy;
@@ -25,9 +26,8 @@ blindfish.Circle.prototype.isInCircle = function (pX, pY) {
 };
 
 // simple triangle class
-blindfish.Triangle = function (point1, point2, point3) {
-  //    [x1,y1],[x2,y2],[x3,y3]
-
+const Triangle = function (point1, point2, point3, p5) {
+  this.p5 = p5;
   this.x1 = point1[0];
   this.y1 = point1[1];
   this.x2 = point2[0];
@@ -38,14 +38,13 @@ blindfish.Triangle = function (point1, point2, point3) {
   this.centreY = (this.y1 + this.y2 + this.y3) / 3;
 };
 
-blindfish.Triangle.prototype.drawTriangle = function () {
-  var p = blindfish.p5;
-  p.triangle(this.x1, this.y1, this.x2, this.y2, this.x3, this.y3);
+Triangle.prototype.drawTriangle = function () {
+  this.p5.triangle(this.x1, this.y1, this.x2, this.y2, this.x3, this.y3);
 };
 
 // Based on forum post at: http://gmc.yoyogames.com/index.php?showtopic=172194
-blindfish.Triangle.prototype.isInTriangle = function (x, y) {
-  var p = blindfish.p5,
+Triangle.prototype.isInTriangle = function (x, y) {
+  var p = this.p5,
     tArea,
     t1Area,
     t2Area,
@@ -74,7 +73,7 @@ blindfish.Triangle.prototype.isInTriangle = function (x, y) {
   return totalArea - tArea < 0.01;
 };
 
-blindfish.Triangle.prototype.triangleArea = function (p1, p2, p3, p4, p5, p6) {
+Triangle.prototype.triangleArea = function (p1, p2, p3, p4, p5, p6) {
   var a = p1 - p5,
     b = p2 - p6,
     c = p3 - p5,
@@ -82,3 +81,5 @@ blindfish.Triangle.prototype.triangleArea = function (p1, p2, p3, p4, p5, p6) {
 
   return 0.5 * Math.abs(a * d - b * c);
 };
+
+export { Circle, Triangle };

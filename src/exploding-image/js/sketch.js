@@ -1,6 +1,8 @@
+import { Particle } from './particle.js';
+
 // Explicitly binding to window makes it clear that this global is
 // not an accident...
-window.P$ = new p5(function (p) {
+new p5(function (p) {
   var img,
     pSize = 8,
     halfPSize = pSize / 2,
@@ -27,12 +29,15 @@ window.P$ = new p5(function (p) {
         var pColour = image.get(i, j, 1, 1);
         var pImg = img.get(i * pSize, j * pSize, pSize, pSize);
 
-        particles[index] = new blindfish.Particle({
-          x: i * pSize + halfPSize,
-          y: j * pSize + halfPSize,
-          size: pSize,
-          img: pImg,
-        });
+        particles[index] = new Particle(
+          {
+            x: i * pSize + halfPSize,
+            y: j * pSize + halfPSize,
+            size: pSize,
+            img: pImg,
+          },
+          p
+        );
         index++;
       }
     }
