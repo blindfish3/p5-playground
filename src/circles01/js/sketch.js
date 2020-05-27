@@ -1,4 +1,16 @@
-blindfish.p5 = new p5(function (p) {
+import { Circle } from './circle.js';
+
+function CircleManager(p5) {
+  var p = p5,
+    circles = [],
+    addCircle = function (args, p5) {
+      return new Circle(args, p5);
+    };
+
+  return addCircle;
+}
+
+new p5(function (p) {
   var parentCircle;
   var childCircles = [];
   var numChildren = 12;
@@ -23,12 +35,15 @@ blindfish.p5 = new p5(function (p) {
   p.setup = function () {
     p.createCanvas(600, 600);
 
-    parentCircle = blindfish.CircleManager.addCircle({
-      x: p.width / 2,
-      y: p.height / 2,
-      rad: 60,
-      divisions: numChildren,
-    });
+    parentCircle = new Circle(
+      {
+        x: p.width / 2,
+        y: p.height / 2,
+        rad: 60,
+        divisions: numChildren,
+      },
+      p
+    );
 
     var controls = new bufi('#controls');
 

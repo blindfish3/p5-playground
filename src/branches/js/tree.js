@@ -1,7 +1,10 @@
-var blindfish = blindfish || {};
-
+const globals = {
+  TAU: (1 + Math.sqrt(5)) / 2,
+  PHI: (1 + Math.sqrt(5)) / 2 - 1,
+};
 // - - - CLASS TREE - - - //
-blindfish.Tree = function (
+const Tree = function (
+  p5,
   rootX,
   rootY,
   len,
@@ -10,13 +13,14 @@ blindfish.Tree = function (
   splits,
   startWeight
 ) {
+  this.p5 = p5;
   this.rootX = rootX;
   this.rootY = rootY;
   this.len = len;
   this.angle = angle;
   this.maxSplits = splits;
 
-  this.lenRatio = blindfish.g.PHI;
+  this.lenRatio = globals.PHI;
   this.weight = startWeight || 10;
 
   this.level = 0;
@@ -30,7 +34,7 @@ blindfish.Tree = function (
 
 // Setting the limit turns out to be fiddly
 // This works for any combination of levels/maxSplits
-blindfish.Tree.prototype.calcLimit = function (levels) {
+Tree.prototype.calcLimit = function (levels) {
   var total = 0;
   for (var i = 1; i < levels; i++) {
     var power = Math.pow(this.maxSplits, i);
@@ -39,8 +43,8 @@ blindfish.Tree.prototype.calcLimit = function (levels) {
   return total;
 };
 
-blindfish.Tree.prototype.addBranches = function () {
-  var p = blindfish.p5,
+Tree.prototype.addBranches = function (p) {
+  var p = this.p5,
     angleSpread = p.HALF_PI,
     angleStep = angleSpread / (this.maxSplits - 1),
     branchCounter = -1, // track which branch sub-branches are being added to
@@ -68,26 +72,21 @@ blindfish.Tree.prototype.addBranches = function () {
     var newAngle =
       thisParent.angle + angleStep * splitCounter - angleSpread / 2; // + Math.random() * 0.4 - 0.2,
 
-    childLength = thisParent.len * this.lenRatio; // + Math.random() * 5;
+    var childLength = thisParent.len * this.lenRatio; // + Math.random() * 5;
 
-    this.branches[i] = new blindfish.Branch(
-      this,
-      thisParent,
-      childLength,
-      newAngle
-    );
+    this.branches[i] = new Branch(p, this, thisParent, childLength, newAngle);
 
     // increment the sub-branch counter
     splitCounter++;
   }
 };
 
-blindfish.Tree.prototype.calcTipPosition = function () {
+Tree.prototype.calcTipPosition = function () {
   this.tipX = this.rootX - Math.cos(this.angle) * this.len;
   this.tipY = this.rootY - Math.sin(this.angle) * this.len;
 };
 
-blindfish.Tree.prototype.updateTreeHeight = function (newLength) {
+Tree.prototype.updateTreeHeight = function (newLength) {
   var ratio = newLength / this.len;
   this.len = newLength;
   this.calcTipPosition();
@@ -97,8 +96,8 @@ blindfish.Tree.prototype.updateTreeHeight = function (newLength) {
 };
 
 //TODO: duplicated in constructor - rationalise...
-blindfish.Tree.prototype.updateTreeAngle = function (inputAngleSpread) {
-  var p = blindfish.p5,
+Tree.prototype.updateTreeAngle = function (inputAngleSpread) {
+  var p = this.p5,
     newAngleSpread = p.radians(inputAngleSpread),
     splitCounter = 0,
     angleStep = newAngleSpread / (this.maxSplits - 1);
@@ -119,7 +118,7 @@ blindfish.Tree.prototype.updateTreeAngle = function (inputAngleSpread) {
   }
 };
 
-blindfish.Tree.prototype.updateTreeWeight = function (newWeight) {
+Tree.prototype.updateTreeWeight = function (newWeight) {
   this.weight = newWeight;
 
   for (var i = 0; i < this.limit; i++) {
@@ -127,7 +126,7 @@ blindfish.Tree.prototype.updateTreeWeight = function (newWeight) {
   }
 };
 
-blindfish.Tree.prototype.updateTreeBranchRatio = function (newRatio) {
+Tree.prototype.updateTreeBranchRatio = function (newRatio) {
   this.lenRatio = newRatio;
 
   for (var i = 0; i < this.limit; i++) {
@@ -135,8 +134,8 @@ blindfish.Tree.prototype.updateTreeBranchRatio = function (newRatio) {
   }
 };
 
-blindfish.Tree.prototype.draw = function () {
-  var p = blindfish.p5;
+Tree.prototype.draw = function () {
+  var p = this.p5;
   p.strokeWeight(this.weight);
   p.line(this.rootX, this.rootY, this.tipX, this.tipY);
 
@@ -146,44 +145,47 @@ blindfish.Tree.prototype.draw = function () {
 };
 
 // - - - CLASS BRANCH - - - //
-blindfish.Branch = function (trunk, parent, len, angle) {
+const Branch = function (p5, trunk, parent, len, angle) {
+  this.p5 = p5;
   this.trunk = trunk;
   this.parent = parent;
   this.len = len;
   this.angle = angle;
   this.level = this.parent.level + 1;
-  this.weight = this.parent.weight * blindfish.g.PHI;
+  this.weight = this.parent.weight * globals.PHI;
   this.calcTipPosition();
 };
 
-blindfish.Branch.prototype.calcTipPosition = function () {
+Branch.prototype.calcTipPosition = function () {
   var parent = this.parent;
   this.tipX = parent.tipX - Math.cos(this.angle) * this.len;
   this.tipY = parent.tipY - Math.sin(this.angle) * this.len;
 };
 
-blindfish.Branch.prototype.calcMidPosition = function () {
+Branch.prototype.calcMidPosition = function () {
   var parent = this.parent;
   this.midX = parent.tipX - Math.cos(this.angle) * (this.len / 2);
   this.midY = parent.tipY - Math.sin(this.angle) * (this.len / 2);
 };
 
-blindfish.Branch.prototype.updateBranchLength = function (ratio) {
+Branch.prototype.updateBranchLength = function (ratio) {
   this.len *= ratio;
   this.calcTipPosition();
 };
 
-blindfish.Branch.prototype.updateBranchLengthRatio = function () {
+Branch.prototype.updateBranchLengthRatio = function () {
   this.len = this.parent.len * this.trunk.lenRatio;
   this.calcTipPosition();
 };
 
-blindfish.Branch.prototype.updateBranchWeight = function () {
-  this.weight = this.parent.weight * blindfish.g.PHI;
+Branch.prototype.updateBranchWeight = function () {
+  this.weight = this.parent.weight * globals.PHI;
 };
 
-blindfish.Branch.prototype.draw = function () {
-  var p = blindfish.p5;
+Branch.prototype.draw = function () {
+  var p = this.p5;
   p.strokeWeight(this.weight);
   p.line(this.parent.tipX, this.parent.tipY, this.tipX, this.tipY);
 };
+
+export { Tree, globals };

@@ -1,4 +1,4 @@
-import { setGlobal } from './blindfish.js';
+import { setGlobal } from '/lib/balls/blindfish.js';
 
 var controls = new bufi('#controls');
 controls.addControlGroup(

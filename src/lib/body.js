@@ -1,4 +1,3 @@
-console.info('body');
 blindfish.Body = function (args) {
   this.x = args.x;
   this.y = args.y;

@@ -1,9 +1,21 @@
-blindfish.makeBalls = function (p, id, identifier) {
+import {
+  dragTracker as DragTracker,
+  globals,
+  selected,
+  setSelected,
+} from '/lib/balls/blindfish.js';
+
+import { Mover } from '/lib/balls/Mover.js';
+import { Ball } from '/lib/balls/Ball.js';
+import { applyGravity } from '/lib/balls/applyGravity.js';
+import { checkCollision } from '/lib/balls/checkCollision.js';
+
+const makeBalls = function (p, id, identifier) {
   var sketchID = p._userNode;
   var things = [];
   var limit = 10;
   var combinedLimit = limit * 2;
-  var dragTracker = blindfish.dragTracker(10);
+  var dragTracker = DragTracker(10);
   var vars = {
     gravity: 0,
     friction: 0.99,
@@ -16,15 +28,14 @@ blindfish.makeBalls = function (p, id, identifier) {
     p.createCanvas(280, 400);
 
     // add controls
-
     controls.addControlGroup(
       [
         {
           type: 'range',
           options: {
             label: 'Gravity',
-            min: -0.2,
-            max: 0.2,
+            min: -0.5,
+            max: 0.5,
             value: vars.gravity,
             step: 0.025,
           },
@@ -73,7 +84,7 @@ blindfish.makeBalls = function (p, id, identifier) {
 
     // Add balls...
     for (var i = 0; i < limit; i++) {
-      things[i] = new blindfish.Mover(
+      things[i] = new Mover(
         {
           x: p.random(p.width),
           y: p.random(p.height),
@@ -84,7 +95,7 @@ blindfish.makeBalls = function (p, id, identifier) {
         vars
       );
 
-      things[limit + i] = new blindfish.Ball(
+      things[limit + i] = new Ball(
         {
           x: p.random(p.width),
           y: p.random(p.height),
@@ -114,10 +125,10 @@ blindfish.makeBalls = function (p, id, identifier) {
               dy = thing1.y - thing0.y,
               distSquared = dx * dx + dy * dy;
             if (vars.polarityOn) {
-              blindfish.applyBallGravity(thing0, thing1, dx, dy, distSquared);
+              applyGravity(thing0, thing1, dx, dy, distSquared);
             }
             if (vars.collisionsOn) {
-              blindfish.checkCollision(thing0, thing1, dx, dy, distSquared);
+              checkCollision(thing0, thing1, dx, dy, distSquared);
             }
           }
         }
@@ -126,22 +137,22 @@ blindfish.makeBalls = function (p, id, identifier) {
       things[i].update();
     }
 
-    if (blindfish.selected && p.mouseIsPressed) {
+    if (selected && p.mouseIsPressed) {
       // if a ball is selected then it's being dragged and we need to track mouse motion
       dragTracker.track(p.createVector(p.mouseX, p.mouseY));
     }
   };
 
   p.mousePressed = function () {
-    if (!blindfish.selected) {
+    if (!selected) {
       for (var i = combinedLimit - 1; i > -1; i--) {
         var thing = things[i];
 
         if (thing.mouseOver) {
           thing.moving = false;
-          // Note that this is stilla gloabl
+          // Note that this is still a gloabl
           // We get away with it because you can't mouseOver multiple sketches!
-          blindfish.selected = thing;
+          setSelected(thing);
           // this is essential in order to avoid multiple balls being selected.
           break;
         }
@@ -150,30 +161,29 @@ blindfish.makeBalls = function (p, id, identifier) {
   };
 
   p.mouseReleased = function () {
-    if (blindfish.selected) {
+    if (selected) {
       dragTracker.release();
-      blindfish.selected.moving = true;
-      blindfish.selected = undefined;
+      selected.moving = true;
+      setSelected(undefined);
     }
   };
 };
 
-blindfish.p51 = new p5(function (p) {
-  blindfish.makeBalls(p, '#sketch01', 'a');
+new p5(function (p) {
+  makeBalls(p, '#sketch01', 'a');
 }, 'sketch01');
 
-blindfish.p52 = new p5(function (p) {
-  blindfish.makeBalls(p, '#sketch02', 'b');
+new p5(function (p) {
+  makeBalls(p, '#sketch02', 'b');
 }, 'sketch02');
 
 /*
-blindfish.p53 = new p5(function (p) {
-    blindfish.makeBalls(p, '#sketch03', 'c');
-}, "sketch03");
+new p5(function (p) {
+    makeBalls(p, '#sketch03', 'c');
+}, 'sketch03');
 
-
-blindfish.p54 = new p5(function (p) {
-    blindfish.makeBalls(p, '#sketch04', 'd');
+new p5(function (p) {
+    makeBalls(p, '#sketch04', 'd');
 }, "sketch04");
 
 */

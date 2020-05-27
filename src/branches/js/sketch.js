@@ -1,6 +1,9 @@
-blindfish.p5 = new p5(function (p) {
+import { Tree, globals } from './tree.js';
+
+new p5(function (p) {
   var tree1;
   var tree2;
+  var tree3;
   var moveStep = 0;
   var controls = new bufi('#controls');
   // in theory vars and controls could be added to the Tree class itself...
@@ -8,13 +11,14 @@ blindfish.p5 = new p5(function (p) {
     length: 160,
     spread: 90,
     weight: 16,
-    branchRatio: blindfish.g.PHI,
+    branchRatio: globals.PHI,
   };
 
   p.setup = function () {
     p.createCanvas(600, 600);
     // controls affect only the first tree
-    tree1 = new blindfish.Tree(
+    tree1 = new Tree(
+      p,
       p.width * 0.5,
       p.height,
       vars.length,
@@ -24,22 +28,8 @@ blindfish.p5 = new p5(function (p) {
       vars.weight
     );
 
-    tree2 = new blindfish.Tree(
-      p.width * 0.2,
-      p.height,
-      70,
-      p.radians(90),
-      3,
-      6
-    );
-    tree3 = new blindfish.Tree(
-      p.width * 0.8,
-      p.height,
-      70,
-      p.radians(90),
-      6,
-      3
-    );
+    tree2 = new Tree(p, p.width * 0.2, p.height, 70, p.radians(90), 3, 6);
+    tree3 = new Tree(p, p.width * 0.8, p.height, 70, p.radians(90), 6, 3);
 
     controls.addControlGroup(
       [
@@ -60,8 +50,8 @@ blindfish.p5 = new p5(function (p) {
           type: 'range',
           options: {
             label: 'ratio',
-            min: blindfish.g.PHI / 2,
-            max: blindfish.g.TAU,
+            min: globals.PHI / 2,
+            max: globals.TAU,
             value: vars.branchRatio,
             step: 0.01,
           },
