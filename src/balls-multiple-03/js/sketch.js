@@ -1,16 +1,40 @@
+import { runInWindow } from '../../lib/loader.js';
 import {
   dragTracker as DragTracker,
   globals,
   selected,
   setSelected,
-} from '/lib/balls/blindfish.js';
+} from '../../lib/balls/blindfish.js';
 
-import { Mover } from '/lib/balls/Mover.js';
-import { Ball } from '/lib/balls/Ball.js';
-import { applyGravity } from '/lib/balls/applyGravity.js';
-import { checkCollision } from '/lib/balls/checkCollision.js';
+import { Mover } from '../../lib/balls/Mover.js';
+import { Ball } from '../../lib/balls/Ball.js';
+import { applyGravity } from '../../lib/balls/applyGravity.js';
+import { checkCollision } from '../../lib/balls/checkCollision.js';
 
-const makeBalls = function (p, id, identifier) {
+function init() {
+  new p5(function (p) {
+    makeBalls(p, '#sketch01', 'a');
+  }, 'sketch01');
+
+  new p5(function (p) {
+    makeBalls(p, '#sketch02', 'b');
+  }, 'sketch02');
+}
+
+init();
+
+/*
+new p5(function (p) {
+    makeBalls(p, '#sketch03', 'c');
+}, 'sketch03');
+
+new p5(function (p) {
+    makeBalls(p, '#sketch04', 'd');
+}, "sketch04");
+
+*/
+
+function makeBalls(p, id, identifier) {
   var sketchID = p._userNode;
   var things = [];
   var limit = 10;
@@ -22,66 +46,10 @@ const makeBalls = function (p, id, identifier) {
     collisionsOn: true,
     polarityOn: true,
   };
-  var controls = new bufi(id);
 
   p.setup = function () {
     p.createCanvas(280, 400);
-
-    // add controls
-    controls.addControlGroup(
-      [
-        {
-          type: 'range',
-          options: {
-            label: 'Gravity',
-            min: -0.5,
-            max: 0.5,
-            value: vars.gravity,
-            step: 0.025,
-          },
-          callback: function (val) {
-            vars.gravity = val;
-          },
-        },
-        {
-          type: 'range',
-          options: {
-            label: 'Friction',
-            min: 0,
-            max: 0.05,
-            value: vars.friction,
-            step: 0.001,
-          },
-          callback: function (val) {
-            vars.friction = 1 - val;
-          },
-        },
-        {
-          type: 'checkbox',
-          options: {
-            id: 'polarityButton' + identifier,
-            label: 'ball polarity',
-            checked: true,
-          },
-          callback: function (val) {
-            vars.polarityOn = val;
-          },
-        },
-        {
-          type: 'checkbox',
-          options: {
-            id: 'collisionButton' + identifier,
-            label: 'ball collisions',
-            checked: true,
-          },
-          callback: function (val) {
-            vars.collisionsOn = val;
-          },
-        },
-      ],
-      'options'
-    );
-
+    addControls(id, vars, identifier);
     // Add balls...
     for (var i = 0; i < limit; i++) {
       things[i] = new Mover(
@@ -167,23 +135,64 @@ const makeBalls = function (p, id, identifier) {
       setSelected(undefined);
     }
   };
-};
+}
 
-new p5(function (p) {
-  makeBalls(p, '#sketch01', 'a');
-}, 'sketch01');
+function addControls(id, vars, identifier) {
+  const controls = new bufi(id);
+  // add controls
+  controls.addControlGroup(
+    [
+      {
+        type: 'range',
+        options: {
+          label: 'Gravity',
+          min: -0.5,
+          max: 0.5,
+          value: vars.gravity,
+          step: 0.025,
+        },
+        callback: function (val) {
+          vars.gravity = val;
+        },
+      },
+      {
+        type: 'range',
+        options: {
+          label: 'Friction',
+          min: 0,
+          max: 0.05,
+          value: vars.friction,
+          step: 0.001,
+        },
+        callback: function (val) {
+          vars.friction = 1 - val;
+        },
+      },
+      {
+        type: 'checkbox',
+        options: {
+          id: 'polarityButton' + identifier,
+          label: 'ball polarity',
+          checked: true,
+        },
+        callback: function (val) {
+          vars.polarityOn = val;
+        },
+      },
+      {
+        type: 'checkbox',
+        options: {
+          id: 'collisionButton' + identifier,
+          label: 'ball collisions',
+          checked: true,
+        },
+        callback: function (val) {
+          vars.collisionsOn = val;
+        },
+      },
+    ],
+    'options'
+  );
 
-new p5(function (p) {
-  makeBalls(p, '#sketch02', 'b');
-}, 'sketch02');
-
-/*
-new p5(function (p) {
-    makeBalls(p, '#sketch03', 'c');
-}, 'sketch03');
-
-new p5(function (p) {
-    makeBalls(p, '#sketch04', 'd');
-}, "sketch04");
-
-*/
+  return controls;
+}

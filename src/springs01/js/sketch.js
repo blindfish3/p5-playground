@@ -1,6 +1,6 @@
-import { Mover } from '/lib/balls/Mover.js';
-import { Ball } from '/lib/balls/Ball.js';
-import { VariableManager } from '/lib/VariableManager.js';
+import { Mover } from '../../lib/balls/Mover.js';
+import { Ball } from '../../lib/balls/Ball.js';
+import { VariableManager } from '../../lib/VariableManager.js';
 
 const globals = {
   gravity: 0.3,
@@ -35,6 +35,7 @@ new p5(function (p) {
           vx: 0,
           vy: 0,
           rad: 20,
+          polarity: 1,
         },
         p,
         variables

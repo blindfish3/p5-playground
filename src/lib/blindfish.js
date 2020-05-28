@@ -1,4 +1,3 @@
-console.info('blindfish');
 var blindfish = blindfish || {};
 
 blindfish.g = {

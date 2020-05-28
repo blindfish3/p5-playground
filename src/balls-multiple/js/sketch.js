@@ -3,187 +3,191 @@ import {
   globals,
   selected,
   setSelected,
-} from '/lib/balls/blindfish.js';
-import { Mover } from '/lib/balls/Mover.js';
-import { Ball } from '/lib/balls/Ball.js';
-import { applyGravity } from '/lib/balls/applyGravity.js';
-import { checkCollision } from '/lib/balls/checkCollision.js';
+} from '../../lib/balls/blindfish.js';
+import { Mover } from '../../lib/balls/Mover.js';
+import { Ball } from '../../lib/balls/Ball.js';
+import { applyGravity } from '../../lib/balls/applyGravity.js';
+import { checkCollision } from '../../lib/balls/checkCollision.js';
 
-new p5(function (p) {
-  var things = [];
-  var limit = 10;
-  var combinedLimit = limit * 2;
-  var dragTracker = DragTracker(10);
+function init() {
+  new p5(function (p) {
+    var things = [];
+    var limit = 10;
+    var combinedLimit = limit * 2;
+    var dragTracker = DragTracker(10);
 
-  p.setup = function () {
-    p.createCanvas(280, 400);
+    p.setup = function () {
+      p.createCanvas(280, 400);
 
-    for (var i = 0; i < limit; i++) {
-      things[i] = new Mover(
-        {
-          x: p.random(p.width),
-          y: p.random(p.height),
-          vx: p.random(8) - 4,
-          vy: p.random(8) - 4,
-        },
-        p
-      );
+      for (var i = 0; i < limit; i++) {
+        things[i] = new Mover(
+          {
+            x: p.random(p.width),
+            y: p.random(p.height),
+            vx: p.random(8) - 4,
+            vy: p.random(8) - 4,
+          },
+          p
+        );
 
-      things[limit + i] = new Ball(
-        {
-          x: p.random(p.width),
-          y: p.random(p.height),
-          vx: p.random(8) - 4,
-          vy: p.random(8) - 4,
-          polarity: p.floor(p.random(1) - 1),
-          rad: p.floor(p.random(10, 20)),
-        },
-        p
-      );
-    }
-  };
-
-  p.draw = function () {
-    p.background(0, 155, 155);
-
-    for (var i = 0; i < combinedLimit; i++) {
-      var thing0 = things[i];
-
-      if (i < combinedLimit - 1) {
-        for (var j = i + 1; j < combinedLimit; j++) {
-          var thing1 = things[j];
-
-          if (thing0.moving && thing1.moving) {
-            var dx = thing1.x - thing0.x,
-              dy = thing1.y - thing0.y,
-              distSquared = dx * dx + dy * dy;
-            if (globals.polarityOn) {
-              applyGravity(thing0, thing1, dx, dy, distSquared);
-            }
-            if (globals.collisionsOn) {
-              checkCollision(thing0, thing1, dx, dy, distSquared);
-            }
-          }
-        }
+        things[limit + i] = new Ball(
+          {
+            x: p.random(p.width),
+            y: p.random(p.height),
+            vx: p.random(8) - 4,
+            vy: p.random(8) - 4,
+            polarity: p.floor(p.random(1) - 1),
+            rad: p.floor(p.random(10, 20)),
+          },
+          p
+        );
       }
+    };
 
-      things[i].update();
-    }
+    p.draw = function () {
+      p.background(0, 155, 155);
 
-    if (selected && p.mouseIsPressed) {
-      // if a ball is selected then it's being dragged and we need to track mouse motion
-      dragTracker.track(p.createVector(p.mouseX, p.mouseY));
-    }
-  };
+      for (var i = 0; i < combinedLimit; i++) {
+        var thing0 = things[i];
 
-  //TODO: fix bug - multiple balls can be picked up :/
-  p.mousePressed = function () {
-    if (!selected) {
-      for (var i = combinedLimit - 1; i > -1; i--) {
-        var thing = things[i];
+        if (i < combinedLimit - 1) {
+          for (var j = i + 1; j < combinedLimit; j++) {
+            var thing1 = things[j];
 
-        if (thing.mouseOver) {
-          thing.moving = false;
-          setSelected(thing);
-        }
-      }
-    }
-  };
-
-  p.mouseReleased = function () {
-    if (selected) {
-      dragTracker.release();
-      selected.moving = true;
-      setSelected(undefined);
-    }
-  };
-}, 'sketch01');
-
-new p5(function (p) {
-  var things = [],
-    limit = 10,
-    combinedLimit = limit * 2,
-    dragTracker = DragTracker(10);
-
-  p.setup = function () {
-    p.createCanvas(280, 400);
-
-    for (var i = 0; i < limit; i++) {
-      things[i] = new Mover(
-        {
-          x: p.random(p.width),
-          y: p.random(p.height),
-          vx: p.random(8) - 4,
-          vy: p.random(8) - 4,
-        },
-        p
-      );
-
-      things[limit + i] = new Ball(
-        {
-          x: p.random(p.width),
-          y: p.random(p.height),
-          vx: p.random(8) - 4,
-          vy: p.random(8) - 4,
-          polarity: p.floor(p.random(1) - 1),
-          rad: p.floor(p.random(10, 20)),
-        },
-        p
-      );
-    }
-  };
-
-  p.draw = function () {
-    p.background(0, 155, 155);
-
-    for (var i = 0; i < combinedLimit; i++) {
-      var thing0 = things[i];
-
-      if (i < combinedLimit - 1) {
-        for (var j = i + 1; j < combinedLimit; j++) {
-          var thing1 = things[j];
-
-          if (thing0.moving && thing1.moving) {
-            var dx = thing1.x - thing0.x,
-              dy = thing1.y - thing0.y,
-              distSquared = dx * dx + dy * dy;
-            if (globals.polarityOn) {
-              applyGravity(thing0, thing1, dx, dy, distSquared);
-            }
-            if (globals.collisionsOn) {
-              checkCollision(thing0, thing1, dx, dy, distSquared);
+            if (thing0.moving && thing1.moving) {
+              var dx = thing1.x - thing0.x,
+                dy = thing1.y - thing0.y,
+                distSquared = dx * dx + dy * dy;
+              if (globals.polarityOn) {
+                applyGravity(thing0, thing1, dx, dy, distSquared);
+              }
+              if (globals.collisionsOn) {
+                checkCollision(thing0, thing1, dx, dy, distSquared);
+              }
             }
           }
         }
+
+        things[i].update();
       }
 
-      things[i].update();
-    }
+      if (selected && p.mouseIsPressed) {
+        // if a ball is selected then it's being dragged and we need to track mouse motion
+        dragTracker.track(p.createVector(p.mouseX, p.mouseY));
+      }
+    };
 
-    if (selected && p.mouseIsPressed) {
-      // if a ball is selected then it's being dragged and we need to track mouse motion
-      dragTracker.track(p.createVector(p.mouseX, p.mouseY));
-    }
-  };
+    //TODO: fix bug - multiple balls can be picked up :/
+    p.mousePressed = function () {
+      if (!selected) {
+        for (var i = combinedLimit - 1; i > -1; i--) {
+          var thing = things[i];
 
-  p.mousePressed = function () {
-    if (!selected) {
-      for (var i = combinedLimit - 1; i > -1; i--) {
-        var thing = things[i];
-
-        if (thing.mouseOver) {
-          thing.moving = false;
-          setSelected(thing);
+          if (thing.mouseOver) {
+            thing.moving = false;
+            setSelected(thing);
+          }
         }
       }
-    }
-  };
+    };
 
-  p.mouseReleased = function () {
-    if (selected) {
-      dragTracker.release();
-      selected.moving = true;
-      setSelected(undefined);
-    }
-  };
-}, 'sketch02');
+    p.mouseReleased = function () {
+      if (selected) {
+        dragTracker.release();
+        selected.moving = true;
+        setSelected(undefined);
+      }
+    };
+  }, 'sketch01');
+
+  new p5(function (p) {
+    var things = [],
+      limit = 10,
+      combinedLimit = limit * 2,
+      dragTracker = DragTracker(10);
+
+    p.setup = function () {
+      p.createCanvas(280, 400);
+
+      for (var i = 0; i < limit; i++) {
+        things[i] = new Mover(
+          {
+            x: p.random(p.width),
+            y: p.random(p.height),
+            vx: p.random(8) - 4,
+            vy: p.random(8) - 4,
+          },
+          p
+        );
+
+        things[limit + i] = new Ball(
+          {
+            x: p.random(p.width),
+            y: p.random(p.height),
+            vx: p.random(8) - 4,
+            vy: p.random(8) - 4,
+            polarity: p.floor(p.random(1) - 1),
+            rad: p.floor(p.random(10, 20)),
+          },
+          p
+        );
+      }
+    };
+
+    p.draw = function () {
+      p.background(0, 155, 155);
+
+      for (var i = 0; i < combinedLimit; i++) {
+        var thing0 = things[i];
+
+        if (i < combinedLimit - 1) {
+          for (var j = i + 1; j < combinedLimit; j++) {
+            var thing1 = things[j];
+
+            if (thing0.moving && thing1.moving) {
+              var dx = thing1.x - thing0.x,
+                dy = thing1.y - thing0.y,
+                distSquared = dx * dx + dy * dy;
+              if (globals.polarityOn) {
+                applyGravity(thing0, thing1, dx, dy, distSquared);
+              }
+              if (globals.collisionsOn) {
+                checkCollision(thing0, thing1, dx, dy, distSquared);
+              }
+            }
+          }
+        }
+
+        things[i].update();
+      }
+
+      if (selected && p.mouseIsPressed) {
+        // if a ball is selected then it's being dragged and we need to track mouse motion
+        dragTracker.track(p.createVector(p.mouseX, p.mouseY));
+      }
+    };
+
+    p.mousePressed = function () {
+      if (!selected) {
+        for (var i = combinedLimit - 1; i > -1; i--) {
+          var thing = things[i];
+
+          if (thing.mouseOver) {
+            thing.moving = false;
+            setSelected(thing);
+          }
+        }
+      }
+    };
+
+    p.mouseReleased = function () {
+      if (selected) {
+        dragTracker.release();
+        selected.moving = true;
+        setSelected(undefined);
+      }
+    };
+  }, 'sketch02');
+}
+
+export { init };

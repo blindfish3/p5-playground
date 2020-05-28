@@ -6,11 +6,22 @@ const browserSync = require('browser-sync').create();
 const cache = require('gulp-cached');
 const del = require('del');
 const eslint = require('gulp-eslint');
+const gulpif = require('gulp-if');
+const uglify = require('gulp-uglify-es').default;
 const prettier = require('gulp-prettier');
 const sourcemaps = require('gulp-sourcemaps');
 
 const SRC = './src';
 const DIST = './dist';
+const BUILD = './build';
+
+function isDevEnv() {
+  return process.env.NODE_ENV !== 'production';
+}
+
+function getBuildTarget() {
+  return isDevEnv() ? DIST : BUILD;
+}
 
 function reload(done) {
   browserSync.reload();
@@ -18,7 +29,7 @@ function reload(done) {
 }
 
 function clean() {
-  return del([DIST + '/**']);
+  return del([getBuildTarget() + '/**']);
 };
 
 
@@ -27,13 +38,14 @@ function assets() {
             '!' + SRC + '/**/*.js',
     ])
     .pipe(cache('assets'))
-    .pipe(gulp.dest(DIST));
+    .pipe(gulp.dest(getBuildTarget()));
 };
 
 function scripts() {
+  const dev = isDevEnv();
   return gulp.src('src/**/*.js')
     .pipe(cache('scripts'))
-    .pipe(sourcemaps.init())
+    .pipe(gulpif(!!dev, sourcemaps.init()))
     .pipe(babel({
             presets: [
               ['@babel/preset-env',
@@ -44,8 +56,11 @@ function scripts() {
               'modules' : false
             }]]
         }))
-    .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest(DIST));
+    .pipe(gulpif(!dev, uglify({
+      exclude: /loader.js/
+    })))
+    .pipe(gulpif(!!dev, sourcemaps.write('.')))
+    .pipe(gulp.dest(getBuildTarget()));
 };
 
 function prettify() {
@@ -65,7 +80,7 @@ function lint() {
 function serve(done) {
   browserSync.init({
       server: {
-          baseDir: DIST,
+          baseDir: getBuildTarget(),
           directory: true,
           serveStaticOptions: {
             extensions: ['html']

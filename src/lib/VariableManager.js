@@ -83,11 +83,11 @@ VariableManager.prototype.addCheckbox = function (
   attrs,
   labelTxt
 ) {
-  var self = this,
-    target = document.getElementById(targetID),
-    controlWrapper = document.createElement('div'),
-    input = document.createElement('input'),
-    label = document.createElement('label');
+  const self = this;
+  const target = document.getElementById(targetID);
+  const controlWrapper = document.createElement('div');
+  const input = document.createElement('input');
+  const label = document.createElement('label');
 
   controlWrapper.setAttribute('class', 'checkbox control');
   input.setAttribute('type', 'checkbox');

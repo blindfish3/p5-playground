@@ -8,6 +8,7 @@ const Ball = function (args, p5) {
   this.rad = args.rad;
   this.mass = (Math.PI * this.rad * this.rad) / 2;
   this.mouseOver = false;
+  this.polarity = args.polarity ? args.polarity : this.polarity;
 
   this.colour = this.polarity > 0 ? [255, 166, 0] : [0, 255, 66];
 };

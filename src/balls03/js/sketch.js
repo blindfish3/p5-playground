@@ -3,11 +3,11 @@ import {
   globals,
   selected,
   setSelected,
-} from '/lib/balls/blindfish.js';
-import { Mover } from '/lib/balls/Mover.js';
-import { Ball } from '/lib/balls/Ball.js';
-import { applyGravity } from '/lib/balls/applyGravity.js';
-import { checkCollision } from '/lib/balls/checkCollision.js';
+} from '../../lib/balls/blindfish.js';
+import { Mover } from '../../lib/balls/Mover.js';
+import { Ball } from '../../lib/balls/Ball.js';
+import { applyGravity } from '../../lib/balls/applyGravity.js';
+import { checkCollision } from '../../lib/balls/checkCollision.js';
 
 new p5(function (p) {
   var things = [];

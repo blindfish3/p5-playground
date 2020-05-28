@@ -1,4 +1,4 @@
-import { Body } from '/lib/body.js';
+import { Body } from '../../lib/body.js';
 
 const Particle = function (args, p5, globals) {
   Body.call(this, args, p5, globals);
