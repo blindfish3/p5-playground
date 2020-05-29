@@ -56,9 +56,7 @@ function scripts() {
               'modules' : false
             }]]
         }))
-    .pipe(gulpif(!dev, uglify({
-      exclude: /loader.js/
-    })))
+    .pipe(gulpif(!dev, uglify()))
     .pipe(gulpif(!!dev, sourcemaps.write('.')))
     .pipe(gulp.dest(getBuildTarget()));
 };
@@ -101,5 +99,7 @@ function serve(done) {
 gulp.task('prettier', prettify);
 gulp.task('lint', lint);
 gulp.task('clean', clean);
+gulp.task('build', series(clean, assets, scripts));
+
 
 gulp.task('default', series(clean, assets, scripts, serve));

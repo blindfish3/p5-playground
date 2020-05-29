@@ -3,7 +3,7 @@ import {
   globals,
   selected,
   setSelected,
-} from '../../lib/balls/blindfish.js';
+} from '../../lib/balls/globals.js';
 import { Mover } from '../../lib/balls/Mover.js';
 import { Ball } from '../../lib/balls/Ball.js';
 import { applyGravity } from '../../lib/balls/applyGravity.js';
@@ -36,7 +36,6 @@ function init() {
             y: p.random(p.height),
             vx: p.random(8) - 4,
             vy: p.random(8) - 4,
-            polarity: p.floor(p.random(1) - 1),
             rad: p.floor(p.random(10, 20)),
           },
           p
@@ -126,7 +125,6 @@ function init() {
             y: p.random(p.height),
             vx: p.random(8) - 4,
             vy: p.random(8) - 4,
-            polarity: p.floor(p.random(1) - 1),
             rad: p.floor(p.random(10, 20)),
           },
           p

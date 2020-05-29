@@ -1,10 +1,9 @@
-import { runInWindow } from '../../lib/loader.js';
 import {
   dragTracker as DragTracker,
   globals,
   selected,
   setSelected,
-} from '../../lib/balls/blindfish.js';
+} from '../../lib/balls/globals.js';
 
 import { Mover } from '../../lib/balls/Mover.js';
 import { Ball } from '../../lib/balls/Ball.js';
@@ -20,8 +19,6 @@ function init() {
     makeBalls(p, '#sketch02', 'b');
   }, 'sketch02');
 }
-
-init();
 
 /*
 new p5(function (p) {
@@ -69,7 +66,6 @@ function makeBalls(p, id, identifier) {
           y: p.random(p.height),
           vx: p.random(8) - 4,
           vy: p.random(8) - 4,
-          polarity: p.floor(p.random(1) - 1),
           rad: p.floor(p.random(10, 20)),
         },
         p,
@@ -196,3 +192,5 @@ function addControls(id, vars, identifier) {
 
   return controls;
 }
+
+export { init };

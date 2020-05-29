@@ -1,4 +1,4 @@
-import { globals } from './blindfish.js';
+import { globals } from './globals.js';
 
 const applyGravity = function (thing0, thing1, dx, dy, distSquared) {
   var dist = Math.sqrt(distSquared),

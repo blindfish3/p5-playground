@@ -75,6 +75,4 @@ function init() {
   }
 }
 
-init();
-
 export { init };
