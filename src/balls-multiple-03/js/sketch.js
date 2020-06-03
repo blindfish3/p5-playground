@@ -3,6 +3,7 @@ import {
   globals,
   selected,
   setSelected,
+  setGlobal,
 } from '../../lib/balls/globals.js';
 
 import { Mover } from '../../lib/balls/Mover.js';
@@ -12,37 +13,37 @@ import { checkCollision } from '../../lib/balls/checkCollision.js';
 
 function init() {
   new p5(function (p) {
-    makeBalls(p, '#sketch01', 'a');
+    makeBalls(p, '#sketch01', 'a', {
+      gravity: -0.3,
+      friction: 1,
+      gravityOn: true,
+      collisionsOn: false,
+      polarityOn: false,
+    });
   }, 'sketch01');
 
   new p5(function (p) {
-    makeBalls(p, '#sketch02', 'b');
+    makeBalls(p, '#sketch02', 'b', globals);
   }, 'sketch02');
+
+  /*
+  new p5(function (p) {
+      makeBalls(p, '#sketch03', 'c');
+  }, 'sketch03');
+
+  new p5(function (p) {
+      makeBalls(p, '#sketch04', 'd');
+  }, 'sketch04');
+*/
 }
 
-/*
-new p5(function (p) {
-    makeBalls(p, '#sketch03', 'c');
-}, 'sketch03');
-
-new p5(function (p) {
-    makeBalls(p, '#sketch04', 'd');
-}, "sketch04");
-
-*/
-
-function makeBalls(p, id, identifier) {
+function makeBalls(p, id, identifier, vars) {
   var sketchID = p._userNode;
   var things = [];
   var limit = 10;
   var combinedLimit = limit * 2;
   var dragTracker = DragTracker(10);
-  var vars = {
-    gravity: 0,
-    friction: 0.99,
-    collisionsOn: true,
-    polarityOn: true,
-  };
+  var vars = vars || globals;
 
   p.setup = function () {
     p.createCanvas(280, 400);
@@ -156,8 +157,8 @@ function addControls(id, vars, identifier) {
         options: {
           label: 'Friction',
           min: 0,
-          max: 0.05,
-          value: vars.friction,
+          max: 0.5,
+          value: 1 - vars.friction,
           step: 0.001,
         },
         callback: function (val) {
@@ -169,7 +170,7 @@ function addControls(id, vars, identifier) {
         options: {
           id: 'polarityButton' + identifier,
           label: 'ball polarity',
-          checked: true,
+          checked: vars.polarityOn,
         },
         callback: function (val) {
           vars.polarityOn = val;
@@ -180,7 +181,7 @@ function addControls(id, vars, identifier) {
         options: {
           id: 'collisionButton' + identifier,
           label: 'ball collisions',
-          checked: true,
+          checked: vars.collisionsOn,
         },
         callback: function (val) {
           vars.collisionsOn = val;

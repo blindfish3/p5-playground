@@ -6,7 +6,7 @@ const constants = {
 
 const globals = {
   gravity: 0.0,
-  friction: 0.99,
+  friction: 0.95,
   spring: 0.05,
   gravityOn: true,
   polarityOn: true,

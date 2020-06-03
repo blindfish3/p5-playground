@@ -2,8 +2,8 @@ import { Mover } from './Mover.js';
 
 // inheritance following the pattern at:
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Introduction_to_Object-Oriented_JavaScript#Inheritance
-const Ball = function (args, p5) {
-  Mover.call(this, args, p5);
+const Ball = function (args, p5, inputGlobals) {
+  Mover.call(this, args, p5, inputGlobals);
 
   this.rad = args.rad;
   this.mass = (Math.PI * this.rad * this.rad) / 2;

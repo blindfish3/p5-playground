@@ -27,7 +27,8 @@ function init() {
             vx: p.random(8) - 4,
             vy: p.random(8) - 4,
           },
-          p
+          p,
+          globals
         );
 
         things[limit + i] = new Ball(
@@ -38,8 +39,8 @@ function init() {
             vy: p.random(8) - 4,
             rad: p.floor(p.random(10, 20)),
           },
-
-          p
+          p,
+          globals
         );
       }
     };
