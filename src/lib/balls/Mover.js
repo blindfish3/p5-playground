@@ -24,45 +24,51 @@ Mover.prototype.draw = function () {
 
 Mover.prototype.update = function () {
   this.draw();
-  moveObjects.call(this, true, this.p);
+  const { width, height, mouseX, mouseY } = this.p;
+  const bounds = { width, height };
+  const override = { x: mouseX, y: mouseY };
+  moveObjects(this, true, bounds, override);
 };
 
 // By using the base characteristics of a Mover object we
 // can write generic functions that add desired behaviours
 // without making them methods of a class
-function moveObjects(keepInBounds, p) {
-  if (this instanceof Mover) {
-    if (this.moving) {
-      this.x += this.vx;
-      this.y += this.vy;
-      if (this.globals.gravityOn) {
-        this.vy -= this.globals.gravity;
+function moveObjects(object, keepInBounds, bounds, override) {
+  const { x, y, vx, vy, rad, bounce, globals, moving } = object;
+  const { friction, gravity, gravityOn } = globals;
+
+  if (object instanceof Mover) {
+    if (moving) {
+      object.x += vx;
+      object.y += vy;
+      if (gravityOn) {
+        object.vy -= gravity;
       }
-      this.vx *= this.globals.friction;
-      this.vy *= this.globals.friction;
+      object.vx *= friction;
+      object.vy *= friction;
 
       if (keepInBounds) {
-        if (this.x > p.width - this.rad) {
-          this.x = p.width - this.rad;
-          this.vx *= -this.bounce;
-        } else if (this.x < 0 + this.rad) {
-          this.x = 0 + this.rad;
-          this.vx *= -this.bounce;
+        if (x > bounds.width - rad) {
+          object.x = bounds.width - rad;
+          object.vx *= -bounce;
+        } else if (x < 0 + rad) {
+          object.x = 0 + rad;
+          object.vx *= -bounce;
         }
 
-        if (this.y > p.height - this.rad) {
-          this.y = p.height - this.rad;
-          this.vy *= -this.bounce;
-        } else if (this.y < 0 + this.rad) {
-          this.y = 0 + this.rad;
-          this.vy *= -this.bounce;
+        if (y > bounds.height - rad) {
+          object.y = bounds.height - rad;
+          object.vy *= -bounce;
+        } else if (y < 0 + rad) {
+          object.y = 0 + rad;
+          object.vy *= -bounce;
         }
       }
     }
     //WARNING:  kludge
     else {
-      this.x = p.mouseX;
-      this.y = p.mouseY;
+      object.x = override.x;
+      object.y = override.y;
     }
   }
   // else throw error
