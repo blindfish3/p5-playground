@@ -29,13 +29,17 @@ function reload(done) {
 }
 
 function clean() {
-  return del([getBuildTarget() + '/**']);
+  return del([BUILD + '/**']);
 };
 
+function cleanDist() {
+  return del([DIST + '/**']);
+}
 
 function assets() {
   return gulp.src([SRC + '/**/*',
             '!' + SRC + '/**/*.js',
+            SRC + '/**/*.min.js',
     ])
     .pipe(cache('assets'))
     .pipe(gulp.dest(getBuildTarget()));
@@ -43,7 +47,8 @@ function assets() {
 
 function scripts() {
   const dev = isDevEnv();
-  return gulp.src('src/**/*.js')
+  return gulp.src([SRC + '/**/*.js',
+                  '!' + SRC + '/**/*.min.js'])
     .pipe(cache('scripts'))
     .pipe(gulpif(!!dev, sourcemaps.init()))
     .pipe(babel({
@@ -62,7 +67,8 @@ function scripts() {
 };
 
 function prettify() {
-  return gulp.src('./src/**/*.js')
+  return gulp.src([SRC + '/**/*.js',
+                  '!' + SRC + '/**/*.min.js'])
     .pipe(prettier({ singleQuote: true }))
     .pipe(gulp.dest(SRC));
 }
@@ -98,7 +104,10 @@ function serve(done) {
 
 gulp.task('prettier', prettify);
 gulp.task('lint', lint);
+gulp.task('scripts', scripts);
 gulp.task('clean', clean);
+gulp.task('assets', assets);
+gulp.task('cleanDist', cleanDist);
 gulp.task('build', series(clean, assets, scripts));
 
 

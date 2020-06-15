@@ -8,7 +8,7 @@
   "license": "MIT",
   "scripts": {
     "format": "gulp lint && gulp prettier",
-    "build": "NODE_ENV=production gulp lint && gulp build"
+    "export": "NODE_ENV=production gulp lint && NODE_ENV=production gulp build"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",
